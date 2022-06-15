@@ -1,5 +1,5 @@
 # App Template
-This template can be used to create an app stub for an [Eliona](https://www.eliona.io/) enviroment.
+This [template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) can be used to create an app stub for an [Eliona](https://www.eliona.io/) enviroment.
 
 ## Configuration
 
