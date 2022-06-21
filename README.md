@@ -23,7 +23,7 @@ The `DEBUG_LEVEL` variable defines the minimum level that should be [logged](htt
 
 ### Database tables ###
 
-<mark>Todo: Describe the database tables the app needs for configuration</mark>
+<mark>Todo: Describe the database objects the app needs for configuration</mark>
 
 ## API Reference
 
