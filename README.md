@@ -13,9 +13,13 @@ The app needs environment variables and database tables for configuration.
 
 The `APPNAME` MUST be set to `template`.
 
+#### API_ENDPOINT
+
+The `API_ENDPOINT` variable configures the [Eliona Api](https://github.com/eliona-smart-building-assistant/go-eliona/tree/main/api).
+
 #### CONNECTION_STRING
 
-The `CONNECTION_STRING` variable configures the [eliona database](https://github.com/eliona-smart-building-assistant/go-eliona/tree/main/db). 
+The `CONNECTION_STRING` variable configures the [Eliona database](https://github.com/eliona-smart-building-assistant/go-eliona/tree/main/db). 
 
 #### DEBUG_LEVEL (optional)
 
