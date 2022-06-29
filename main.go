@@ -16,7 +16,7 @@
 package main
 
 import (
-	"github.com/eliona-smart-building-assistant/go-eliona/apps"
+	"github.com/eliona-smart-building-assistant/go-eliona/app"
 	"github.com/eliona-smart-building-assistant/go-eliona/common"
 	"github.com/eliona-smart-building-assistant/go-eliona/db"
 	"github.com/eliona-smart-building-assistant/go-eliona/log"
@@ -34,15 +34,15 @@ func main() {
 	defer db.ClosePool()
 
 	// Init the app before the first run.
-	apps.Init(db.Pool(), common.AppName(),
-		apps.ExecSqlFile("conf/init.sql"),
+	app.Init(db.Pool(), common.AppName(),
+		app.ExecSqlFile("conf/init.sql"),
 		conf.InitConfiguration,
 		eliona.InitEliona,
 	)
 
 	// Starting the service to collect the data for each configured Hailo Smart Hub.
-	apps.WaitFor(
-		apps.Loop(doAnything, time.Second),
+	common.WaitFor(
+		common.Loop(doAnything, time.Second),
 	)
 
 	log.Info("Template", "Terminate the app.")
