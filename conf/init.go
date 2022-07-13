@@ -16,7 +16,7 @@
 package conf
 
 import (
-	"github.com/eliona-smart-building-assistant/go-eliona/db"
+	"github.com/eliona-smart-building-assistant/go-utils/db"
 )
 
 // InitConfiguration initialize the configuration of the app
