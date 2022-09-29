@@ -43,6 +43,7 @@ func main() {
 	// Starting the service to collect the data for each configured Hailo Smart Hub.
 	common.WaitFor(
 		common.Loop(doAnything, time.Second),
+		listenApiRequests,
 	)
 
 	log.Info("Template", "Terminate the app.")
