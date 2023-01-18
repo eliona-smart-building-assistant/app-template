@@ -15,6 +15,14 @@
 
 package main
 
+import (
+	"github.com/eliona-smart-building-assistant/go-utils/common"
+	"github.com/eliona-smart-building-assistant/go-utils/log"
+	"hailo/apiserver"
+	"hailo/apiservices"
+	"net/http"
+)
+
 // doAnything is the main app function which is called periodically
 func doAnything() {
 
@@ -22,4 +30,13 @@ func doAnything() {
 	// Todo: implement everything the app should do
 	//
 
+}
+
+// listenApiRequests starts an API server and listen for API requests
+// The API endpoints are defined in the openapi.yaml file
+func listenApiRequests() {
+	err := http.ListenAndServe(":"+common.Getenv("API_SERVER_PORT", "3000"), apiserver.NewRouter(
+		apiserver.NewConfigurationApiController(apiservices.NewConfigurationApiService()),
+	))
+	log.Fatal("Hailo", "Error in API Server: %v", err)
 }
