@@ -49,23 +49,23 @@ func NewConfigurationApiController(s ConfigurationApiServicer, opts ...Configura
 func (c *ConfigurationApiController) Routes() Routes {
 	return Routes{
 		{
-			"GetExamples",
+			"GetConfigurations",
 			strings.ToUpper("Get"),
-			"/v1/examples",
-			c.GetExamples,
+			"/v1/configurations",
+			c.GetConfigurations,
 		},
 		{
-			"PostExample",
+			"PostConfiguration",
 			strings.ToUpper("Post"),
-			"/v1/examples",
-			c.PostExample,
+			"/v1/configurations",
+			c.PostConfiguration,
 		},
 	}
 }
 
-// GetExamples - Get example configuration
-func (c *ConfigurationApiController) GetExamples(w http.ResponseWriter, r *http.Request) {
-	result, err := c.service.GetExamples(r.Context())
+// GetConfigurations - Get example configurations
+func (c *ConfigurationApiController) GetConfigurations(w http.ResponseWriter, r *http.Request) {
+	result, err := c.service.GetConfigurations(r.Context())
 	// If an error occurred, encode the error with the status code
 	if err != nil {
 		c.errorHandler(w, r, err, &result)
@@ -76,20 +76,20 @@ func (c *ConfigurationApiController) GetExamples(w http.ResponseWriter, r *http.
 
 }
 
-// PostExample - Creates an example configuration
-func (c *ConfigurationApiController) PostExample(w http.ResponseWriter, r *http.Request) {
-	exampleParam := Example{}
+// PostConfiguration - Creates an example configuration
+func (c *ConfigurationApiController) PostConfiguration(w http.ResponseWriter, r *http.Request) {
+	configurationParam := Configuration{}
 	d := json.NewDecoder(r.Body)
 	d.DisallowUnknownFields()
-	if err := d.Decode(&exampleParam); err != nil {
+	if err := d.Decode(&configurationParam); err != nil {
 		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
 		return
 	}
-	if err := AssertExampleRequired(exampleParam); err != nil {
+	if err := AssertConfigurationRequired(configurationParam); err != nil {
 		c.errorHandler(w, r, err, nil)
 		return
 	}
-	result, err := c.service.PostExample(r.Context(), exampleParam)
+	result, err := c.service.PostConfiguration(r.Context(), configurationParam)
 	// If an error occurred, encode the error with the status code
 	if err != nil {
 		c.errorHandler(w, r, err, &result)

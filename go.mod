@@ -1,4 +1,4 @@
-module hailo
+module template
 
 go 1.18
 
