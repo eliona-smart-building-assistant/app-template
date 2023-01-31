@@ -12,8 +12,8 @@ package apiservices
 import (
 	"context"
 	"errors"
-	"hailo/apiserver"
 	"net/http"
+	"template/apiserver"
 )
 
 // ConfigurationApiService is a service that implements the logic for the ConfigurationApiServicer
@@ -27,24 +27,24 @@ func NewConfigurationApiService() apiserver.ConfigurationApiServicer {
 	return &ConfigurationApiService{}
 }
 
-// GetExamples - Get example configuration
-func (s *ConfigurationApiService) GetExamples(ctx context.Context) (apiserver.ImplResponse, error) {
-	// TODO - update GetExamples with the required logic for this service method.
+// GetConfigurations - Get example configurations
+func (s *ConfigurationApiService) GetConfigurations(ctx context.Context) (apiserver.ImplResponse, error) {
+	// TODO - update GetConfigurations with the required logic for this service method.
 	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
 
-	//TODO: Uncomment the next line to return response Response(200, []Example{}) or use other options such as http.Ok ...
-	//return Response(200, []Example{}), nil
+	//TODO: Uncomment the next line to return response Response(200, []Configuration{}) or use other options such as http.Ok ...
+	//return Response(200, []Configuration{}), nil
 
-	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GetExamples method not implemented")
+	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GetConfigurations method not implemented")
 }
 
-// PostExample - Creates an example configuration
-func (s *ConfigurationApiService) PostExample(ctx context.Context, example apiserver.Example) (apiserver.ImplResponse, error) {
-	// TODO - update PostExample with the required logic for this service method.
+// PostConfiguration - Creates an example configuration
+func (s *ConfigurationApiService) PostConfiguration(ctx context.Context, configuration apiserver.Configuration) (apiserver.ImplResponse, error) {
+	// TODO - update PostConfiguration with the required logic for this service method.
 	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
 
-	//TODO: Uncomment the next line to return response Response(201, Example{}) or use other options such as http.Ok ...
-	//return Response(201, Example{}), nil
+	//TODO: Uncomment the next line to return response Response(201, Configuration{}) or use other options such as http.Ok ...
+	//return Response(201, Configuration{}), nil
 
-	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("PostExample method not implemented")
+	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("PostConfiguration method not implemented")
 }

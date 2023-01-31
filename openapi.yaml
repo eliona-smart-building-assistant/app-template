@@ -30,47 +30,80 @@ tags:
     description: Configuration stuff for app template
     externalDocs:
       url: https://github.com/eliona-smart-building-assistant/app-template
+  - name: Version
+    description: API version
 
 paths:
-  /examples:
+  /configurations:
     get:
       tags:
         - Configuration
-      summary: Get example configuration
-      description: Gets information about example.
-      operationId: getExamples
+      summary: Get example configurations
+      description: Gets information about configurations.
+      operationId: getConfigurations
       responses:
         200:
-          description: Successfully returned example configuration
+          description: Successfully returned example configurations
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Example'
+                  $ref: '#/components/schemas/Configuration'
     post:
       tags:
         - Configuration
       summary: Creates an example configuration
       description: Creates an example configuration.
-      operationId: postExample
+      operationId: postConfiguration
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Example'
+              $ref: '#/components/schemas/Configuration'
       responses:
         201:
           description: Successfully created an example configuration
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Example'
+                $ref: '#/components/schemas/Configuration'
+
+  /version:
+    get:
+      summary: Version of the API
+      description: Gets information about the APIs version.
+      operationId: getVersion
+      tags:
+        - Version
+      responses:
+        200:
+          description: Successfully returned the APIs version.
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+  /version/openapi.json:
+    get:
+      summary: OpenAPI specification for this API version
+      description: Gets specification for this API version as an openapi.json file.
+      operationId: getOpenAPI
+      tags:
+        - Version
+      responses:
+        200:
+          description: Successfully returned the openapi.json file.
+          content:
+            application/json:
+              schema:
+                type: object
 
 components:
   schemas:
 
-    Example:
+    Configuration:
       type: object
       description: Simply a example configuration
       properties:

@@ -18,8 +18,16 @@ import (
 // The ConfigurationApiRouter implementation should parse necessary information from the http request,
 // pass the data to a ConfigurationApiServicer to perform the required actions, then write the service results to the http response.
 type ConfigurationApiRouter interface {
-	GetExamples(http.ResponseWriter, *http.Request)
-	PostExample(http.ResponseWriter, *http.Request)
+	GetConfigurations(http.ResponseWriter, *http.Request)
+	PostConfiguration(http.ResponseWriter, *http.Request)
+}
+
+// VersionApiRouter defines the required methods for binding the api requests to a responses for the VersionApi
+// The VersionApiRouter implementation should parse necessary information from the http request,
+// pass the data to a VersionApiServicer to perform the required actions, then write the service results to the http response.
+type VersionApiRouter interface {
+	GetOpenAPI(http.ResponseWriter, *http.Request)
+	GetVersion(http.ResponseWriter, *http.Request)
 }
 
 // ConfigurationApiServicer defines the api actions for the ConfigurationApi service
@@ -27,6 +35,15 @@ type ConfigurationApiRouter interface {
 // while the service implementation can be ignored with the .openapi-generator-ignore file
 // and updated with the logic required for the API.
 type ConfigurationApiServicer interface {
-	GetExamples(context.Context) (ImplResponse, error)
-	PostExample(context.Context, Example) (ImplResponse, error)
+	GetConfigurations(context.Context) (ImplResponse, error)
+	PostConfiguration(context.Context, Configuration) (ImplResponse, error)
+}
+
+// VersionApiServicer defines the api actions for the VersionApi service
+// This interface intended to stay up to date with the openapi yaml used to generate it,
+// while the service implementation can be ignored with the .openapi-generator-ignore file
+// and updated with the logic required for the API.
+type VersionApiServicer interface {
+	GetOpenAPI(context.Context) (ImplResponse, error)
+	GetVersion(context.Context) (ImplResponse, error)
 }
