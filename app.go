@@ -26,6 +26,8 @@ import (
 // doAnything is the main app function which is called periodically
 func doAnything() {
 
+	log.Debug("main", "do anything")
+
 	//
 	// Todo: implement everything the app should do
 	//
