@@ -43,7 +43,7 @@ func main() {
 	// Starting the service to collect the data for this app.
 	common.WaitFor(
 		common.Loop(doAnything, time.Second),
-		listenApiRequests,
+		listenApi,
 	)
 
 	log.Info("main", "Terminate the app.")
