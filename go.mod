@@ -8,6 +8,10 @@ require (
 	github.com/gorilla/mux v1.8.0
 )
 
+// Bugfix see: https://github.com/volatiletech/sqlboiler/blob/91c4f335dd886d95b03857aceaf17507c46f9ec5/README.md
+// decimal library showing errors like: pq: encode: unknown type types.NullDecimal is a result of a too-new and broken version of the github.com/ericlargergren/decimal package, use the following version in your go.mod: github.com/ericlagergren/decimal v0.0.0-20181231230500-73749d4874d5
+replace github.com/ericlagergren/decimal => github.com/ericlagergren/decimal v0.0.0-20181231230500-73749d4874d5
+
 require (
 	github.com/eliona-smart-building-assistant/go-eliona-api-client/v2 v2.4.4 // indirect
 	github.com/friendsofgo/errors v0.9.2 // indirect
