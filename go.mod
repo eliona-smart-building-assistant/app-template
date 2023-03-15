@@ -6,6 +6,7 @@ require (
 	github.com/eliona-smart-building-assistant/go-eliona v1.9.3
 	github.com/eliona-smart-building-assistant/go-utils v1.0.14
 	github.com/gorilla/mux v1.8.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 // Bugfix see: https://github.com/volatiletech/sqlboiler/blob/91c4f335dd886d95b03857aceaf17507c46f9ec5/README.md
