@@ -17,8 +17,9 @@ package main
 
 import (
 	"github.com/eliona-smart-building-assistant/go-utils/common"
+	"github.com/eliona-smart-building-assistant/go-utils/http"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
-	"net/http"
+	nethttp "net/http"
 	"template/apiserver"
 	"template/apiservices"
 )
@@ -26,18 +27,15 @@ import (
 // doAnything is the main app function which is called periodically
 func doAnything() {
 
-	//
 	// Todo: implement everything the app should do
-	//
+	log.Debug("main", "do anything")
 
 }
 
-// listenApiRequests starts an API server and listen for API requests
-// The API endpoints are defined in the openapi.yaml file
-func listenApiRequests() {
-	err := http.ListenAndServe(":"+common.Getenv("API_SERVER_PORT", "3000"), apiserver.NewRouter(
+// listenApi starts the API server and listen for requests
+func listenApi() {
+	http.ListenApiWithOs(&nethttp.Server{Addr: ":" + common.Getenv("API_SERVER_PORT", "3000"), Handler: apiserver.NewRouter(
 		apiserver.NewConfigurationApiController(apiservices.NewConfigurationApiService()),
 		apiserver.NewVersionApiController(apiservices.NewVersionApiService()),
-	))
-	log.Fatal("main", "Error in API Server: %v", err)
+	)})
 }
