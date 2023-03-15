@@ -42,7 +42,7 @@ paths:
       description: Gets information about configurations.
       operationId: getConfigurations
       responses:
-        200:
+        "200":
           description: Successfully returned example configurations
           content:
             application/json:
@@ -62,7 +62,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Configuration'
       responses:
-        201:
+        "201":
           description: Successfully created an example configuration
           content:
             application/json:
@@ -77,7 +77,7 @@ paths:
       tags:
         - Version
       responses:
-        200:
+        "200":
           description: Successfully returned the APIs version.
           content:
             application/json:
@@ -93,7 +93,7 @@ paths:
       tags:
         - Version
       responses:
-        200:
+        "200":
           description: Successfully returned the openapi.json file.
           content:
             application/json:
