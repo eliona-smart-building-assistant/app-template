@@ -1,5 +1,5 @@
-output   = "db/template"
-pkgname  = "dbtemplate"
+output   = "appdb"
+pkgname  = "appdb"
 add-global-variants = true
 wipe     = true
 no-tests = true
