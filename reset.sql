@@ -39,4 +39,22 @@ WHERE asset_type LIKE 'template_%';
 DELETE FROM asset_type
 WHERE asset_type LIKE 'template_%';
 
+DELETE FROM public.widget_data
+WHERE widget_id IN (
+	SELECT public.widget.id
+	FROM public.widget
+	JOIN public.dashboard USING (dashboard_id)
+	WHERE public.dashboard.name LIKE 'Template%'
+);
+
+DELETE FROM public.widget
+WHERE dashboard_id IN (
+	SELECT dashboard_id
+	FROM public.dashboard
+	WHERE name LIKE 'Template%'
+);
+
+DELETE FROM public.dashboard
+WHERE name LIKE 'Template%'
+
 -- DELETE FROM eliona_app WHERE app_name = 'template';
