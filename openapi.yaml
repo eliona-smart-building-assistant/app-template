@@ -30,8 +30,16 @@ tags:
     description: Configuration stuff for app template
     externalDocs:
       url: https://github.com/eliona-smart-building-assistant/app-template
+
   - name: Version
     description: API version
+    externalDocs:
+      url: https://github.com/eliona-smart-building-assistant/app-template
+
+  - name: Customization
+    description: Help to customize Eliona
+    externalDocs:
+      url: https://github.com/eliona-smart-building-assistant/app-template
 
 paths:
   /configurations:
@@ -99,6 +107,41 @@ paths:
             application/json:
               schema:
                 type: object
+
+  /dashboard-templates/{dashboard-template-name}:
+    get:
+      tags:
+        - Customization
+      summary: Get a full dashboard template
+      description: Delivers a dashboard template which can assigned to users in Eliona
+      externalDocs:
+        description: The API to assign the dashboard to users in Eliona (see post /dashboards endpoint).
+        url: https://github.com/eliona-smart-building-assistant/eliona-api
+      operationId: getDashboardTemplateByName
+      parameters:
+        - name: dashboard-template-name
+          in: path
+          description: Name of the dashboard template
+          required: true
+          schema:
+            type: string
+            example: Template
+        - name: projectId
+          in: query
+          description: Define the project the dashboard should be
+          required: true
+          schema:
+            type: string
+            example: 99
+      responses:
+        200:
+          description: Successfully returned dashboard template
+          content:
+            application/json:
+              schema:
+                $ref: 'https://raw.githubusercontent.com/eliona-smart-building-assistant/eliona-api/main/openapi.yaml#/components/schemas/Dashboard'
+        404:
+          description: Template name not found
 
 components:
   schemas:

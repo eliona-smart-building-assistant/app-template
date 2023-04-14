@@ -37,5 +37,6 @@ func listenApi() {
 	http.ListenApiWithOs(&nethttp.Server{Addr: ":" + common.Getenv("API_SERVER_PORT", "3000"), Handler: apiserver.NewRouter(
 		apiserver.NewConfigurationApiController(apiservices.NewConfigurationApiService()),
 		apiserver.NewVersionApiController(apiservices.NewVersionApiService()),
+		apiserver.NewCustomizationApiController(apiservices.NewCustomizationApiService()),
 	)})
 }
