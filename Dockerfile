@@ -13,7 +13,7 @@
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-FROM golang:1.18-alpine3.15 AS build
+FROM eliona/base-golang:latest-1-alpine AS build
 
 RUN apk add git
 
@@ -27,7 +27,7 @@ RUN DATE=$(date) && \
     GIT_COMMIT=$(git rev-list -1 HEAD) && \
     go build -ldflags "-X 'template/apiservices.BuildTimestamp=$DATE' -X 'template/apiservices.GitCommit=$GIT_COMMIT'" -o ../app
 
-FROM alpine:3.15 AS target
+FROM eliona/base-alpine:latest-3.17 AS target
 
 COPY --from=build /app ./
 COPY conf/*.sql ./conf/
