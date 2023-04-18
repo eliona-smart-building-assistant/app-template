@@ -27,17 +27,17 @@ DELETE FROM heap
 WHERE asset_id IN (
 	SELECT asset_id
 	FROM asset
-	WHERE asset_type LIKE 'template\_%' ESCAPE '\'
+	WHERE asset_type LIKE E'template\\_%'
 );
 
 DELETE FROM attribute_schema
-WHERE asset_type LIKE 'template\_%' ESCAPE '\';
+WHERE asset_type LIKE E'template\\_%';
 
 DELETE FROM asset
-WHERE asset_type LIKE 'template\_%' ESCAPE '\'; 
+WHERE asset_type LIKE E'template\\_%';
 
 DELETE FROM asset_type
-WHERE asset_type LIKE 'template\_%' ESCAPE '\';
+WHERE asset_type LIKE E'template\\_%';
 
 DELETE FROM public.widget_data
 WHERE widget_id IN (
