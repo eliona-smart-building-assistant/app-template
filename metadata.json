@@ -12,6 +12,7 @@
   "dashboardTemplateNames": [
     "Template"
   ],
+  "apiSpecificationPath": "/v1/version/openapi.json",
   "documentationUrl": "https://doc.eliona.io/eliona/referenzen/app-entwicklung",
   "useEnvironment": [ "CONNECTION_STRING", "API_ENDPOINT", "API_TOKEN" ]
 }
