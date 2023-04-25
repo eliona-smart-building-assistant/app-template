@@ -13,9 +13,6 @@ user   = "postgres"
 pass   = "secret"
 schema = "template"
 sslmode = "disable"
-whitelist = [
-    "example_table"
-]
 
 [[types]]
 [types.match]
