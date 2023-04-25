@@ -7,3 +7,5 @@ go get github.com/volatiletech/null/v8
 sqlboiler psql \
     -c sqlboiler.toml \
     --wipe --no-tests
+
+go mod tidy
