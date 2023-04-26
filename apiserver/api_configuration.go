@@ -63,7 +63,7 @@ func (c *ConfigurationApiController) Routes() Routes {
 	}
 }
 
-// GetConfigurations - Get example configurations
+// GetConfigurations - Get configurations
 func (c *ConfigurationApiController) GetConfigurations(w http.ResponseWriter, r *http.Request) {
 	result, err := c.service.GetConfigurations(r.Context())
 	// If an error occurred, encode the error with the status code
@@ -76,7 +76,7 @@ func (c *ConfigurationApiController) GetConfigurations(w http.ResponseWriter, r 
 
 }
 
-// PostConfiguration - Creates an example configuration
+// PostConfiguration - Creates a configuration
 func (c *ConfigurationApiController) PostConfiguration(w http.ResponseWriter, r *http.Request) {
 	configurationParam := Configuration{}
 	d := json.NewDecoder(r.Body)

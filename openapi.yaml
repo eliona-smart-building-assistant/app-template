@@ -27,7 +27,7 @@ servers:
 
 tags:
   - name: Configuration
-    description: Configuration stuff for app template
+    description: Configure the app
     externalDocs:
       url: https://github.com/eliona-smart-building-assistant/app-template
 
@@ -37,7 +37,7 @@ tags:
       url: https://github.com/eliona-smart-building-assistant/app-template
 
   - name: Customization
-    description: Help to customize Eliona
+    description: Help to customize Eliona environment
     externalDocs:
       url: https://github.com/eliona-smart-building-assistant/app-template
 
@@ -46,36 +46,36 @@ paths:
     get:
       tags:
         - Configuration
-      summary: Get example configurations
-      description: Gets information about configurations.
+      summary: Get configurations
+      description: Gets information about all configurations.
       operationId: getConfigurations
       responses:
         "200":
-          description: Successfully returned example configurations
+          description: Successfully returned all configurations
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Configuration'
+                  $ref: "#/components/schemas/Configuration"
     post:
       tags:
         - Configuration
-      summary: Creates an example configuration
-      description: Creates an example configuration.
+      summary: Creates a configuration
+      description: Creates a configuration.
       operationId: postConfiguration
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Configuration'
+              $ref: "#/components/schemas/Configuration"
       responses:
         "201":
-          description: Successfully created an example configuration
+          description: Successfully created a configuration
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Configuration'
+                $ref: "#/components/schemas/Configuration"
 
   /version:
     get:
@@ -91,7 +91,6 @@ paths:
             application/json:
               schema:
                 type: object
-
 
   /version/openapi.json:
     get:
@@ -139,13 +138,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'https://raw.githubusercontent.com/eliona-smart-building-assistant/eliona-api/main/openapi.yaml#/components/schemas/Dashboard'
+                $ref: "https://raw.githubusercontent.com/eliona-smart-building-assistant/eliona-api/main/openapi.yaml#/components/schemas/Dashboard"
         404:
           description: Template name not found
 
 components:
   schemas:
-
     Configuration:
       type: object
       description: Simply a example configuration
