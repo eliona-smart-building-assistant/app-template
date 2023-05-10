@@ -17,13 +17,16 @@
 -- The only thing that remains after testing then are the incremented auto-increment values and app
 -- registration (which you can optionally remove as well by uncommenting the last command).
 
+DELETE FROM versioning.patches
+WHERE app_name = 'template';
+
 INSERT INTO public.eliona_store (app_name, category, version)
 VALUES ('template', 'app', '1.0.0')
-    ON CONFLICT (app_name) DO UPDATE SET version = '1.0.0';
+	ON CONFLICT (app_name) DO UPDATE SET version = '1.0.0';
 
 INSERT INTO public.eliona_app (app_name, enable)
 VALUES ('template', 't')
-    ON CONFLICT (app_name) DO UPDATE SET initialized_at = null;
+	ON CONFLICT (app_name) DO UPDATE SET initialized_at = null;
 
 DROP SCHEMA IF EXISTS template CASCADE;
 
