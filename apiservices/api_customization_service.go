@@ -21,6 +21,8 @@ import (
 	"template/apiserver"
 )
 
+const dashboardName = "Template"
+
 // CustomizationApiService is a service that implements the logic for the CustomizationApiServicer
 // This service should implement the business logic for every endpoint for the CustomizationApi API.
 // Include any external packages or services that will be required by this service.
@@ -34,9 +36,14 @@ func NewCustomizationApiService() apiserver.CustomizationApiServicer {
 
 // GetDashboardTemplateByName - Get a full dashboard template
 func (s *CustomizationApiService) GetDashboardTemplateByName(ctx context.Context, dashboardTemplateName string, projectId string) (apiserver.ImplResponse, error) {
-	if dashboardTemplateName == "Template" {
+	if dashboardTemplateName == dashboardName {
 		return apiserver.ImplResponse{Code: http.StatusNotImplemented}, nil
 	} else {
 		return apiserver.ImplResponse{Code: http.StatusNotFound}, nil
 	}
+}
+
+// GetDashboardTemplateNames - List available dashboard templates
+func (s *CustomizationApiService) GetDashboardTemplateNames(ctx context.Context) (apiserver.ImplResponse, error) {
+	return apiserver.Response(http.StatusOK, []string{dashboardName}), nil
 }

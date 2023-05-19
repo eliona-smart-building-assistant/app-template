@@ -55,6 +55,12 @@ func (c *CustomizationApiController) Routes() Routes {
 			"/v1/dashboard-templates/{dashboard-template-name}",
 			c.GetDashboardTemplateByName,
 		},
+		{
+			"GetDashboardTemplateNames",
+			strings.ToUpper("Get"),
+			"/v1/dashboard-template-names",
+			c.GetDashboardTemplateNames,
+		},
 	}
 }
 
@@ -66,6 +72,19 @@ func (c *CustomizationApiController) GetDashboardTemplateByName(w http.ResponseW
 
 	projectIdParam := query.Get("projectId")
 	result, err := c.service.GetDashboardTemplateByName(r.Context(), dashboardTemplateNameParam, projectIdParam)
+	// If an error occurred, encode the error with the status code
+	if err != nil {
+		c.errorHandler(w, r, err, &result)
+		return
+	}
+	// If no error, encode the body and the result code
+	EncodeJSONResponse(result.Body, &result.Code, w)
+
+}
+
+// GetDashboardTemplateNames - List available dashboard templates
+func (c *CustomizationApiController) GetDashboardTemplateNames(w http.ResponseWriter, r *http.Request) {
+	result, err := c.service.GetDashboardTemplateNames(r.Context())
 	// If an error occurred, encode the error with the status code
 	if err != nil {
 		c.errorHandler(w, r, err, &result)

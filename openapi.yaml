@@ -107,6 +107,25 @@ paths:
               schema:
                 type: object
 
+  /dashboard-template-names:
+    get:
+      tags:
+        - Customization
+      summary: List available dashboard templates
+      description: Delivers all names for which the app provides dashboard templates
+      operationId: getDashboardTemplateNames
+      responses:
+        "200":
+          description: Successfully returned list of template names
+          content:
+            application/json:
+              schema:
+                description: Names of available dashboard templates
+                type: array
+                items:
+                  description: Name of the dashboard template
+                  type: string
+
   /dashboard-templates/{dashboard-template-name}:
     get:
       tags:
