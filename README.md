@@ -9,7 +9,9 @@ The app needs environment variables and database tables for configuration. To ed
 
 ### Registration in Eliona ###
 
-To start and initialize an app in an Eliona environment, the app have to registered in Eliona. For this, an entry in the database table `public.eliona_app` is necessary.
+To start and initialize an app in an Eliona environment, the app has to be registered in Eliona. For this, entries in database tables `public.eliona_app` and `public.eliona_store` are necessary.
+
+This initialization can be handled by the `reset.sql` script.
 
 
 ### Environment variables
@@ -23,11 +25,11 @@ To start and initialize an app in an Eliona environment, the app have to registe
 
 - `API_ENDPOINT`:  configures the endpoint to access the [Eliona API v2](https://github.com/eliona-smart-building-assistant/eliona-api). Otherwise, the app can't be initialized and started. (e.g. `http://api-v2:3000/v2`)
 
-- `API_TOKEN`: defines the secret to authenticate the app and access the API. 
+- `API_TOKEN`: defines the secret to authenticate the app and access the Eliona API.
 
 - `API_SERVER_PORT`(optional): define the port the API server listens. The default value is Port `3000`. <mark>Todo: Decide if the app needs its own API. If so, an API server have to implemented and the port have to be configurable.</mark>
 
-- `LOG_LEVEL`(optional): defines the minimum level that should be [logged](https://github.com/eliona-smart-building-assistant/go-utils/blob/main/log/README.md). Not defined the default level is `info`.
+- `LOG_LEVEL`(optional): defines the minimum level that should be [logged](https://github.com/eliona-smart-building-assistant/go-utils/blob/main/log/README.md). The default level is `info`.
 
 ### Database tables ###
 
