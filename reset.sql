@@ -62,6 +62,7 @@ WHERE dashboard_id IN (
 );
 
 DELETE FROM public.dashboard
-WHERE name LIKE 'Template%'
+WHERE name LIKE 'Template%';
 
 -- DELETE FROM eliona_app WHERE app_name = 'template';
+-- DELETE FROM eliona_store WHERE app_name = 'template';

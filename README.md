@@ -1,5 +1,5 @@
 # App Template
-  
+
 This template is a part of the Eliona App SDK. It can be used to create an app stub for an Eliona environment.
 
 ## Configuration
