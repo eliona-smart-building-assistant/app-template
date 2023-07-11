@@ -32,7 +32,7 @@ FROM eliona/base-alpine:latest-3.17 AS target
 COPY --from=build /app ./
 COPY conf/*.sql ./conf/
 COPY eliona/*.json ./eliona/
-COPY apiserver/openapi.json /
+COPY openapi.yaml ./
 
 ENV APPNAME=template
 

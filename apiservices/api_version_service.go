@@ -52,8 +52,6 @@ func (s *VersionApiService) GetOpenAPI(ctx context.Context) (apiserver.ImplRespo
 		log.Error("services", "%s: %v", "GetOpenAPI", err)
 		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
 	}
-	// The calling code later calls json.Encode() on this body, but ignores its
-	// error, so we have to check for the error earlier.
 	if err := tryJSONEncoding(body); err != nil {
 		log.Error("services", "openapi file not encodable to JSON: %v", err)
 		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, nil

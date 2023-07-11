@@ -57,7 +57,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Configuration"
+                  $ref: '#/components/schemas/Configuration'
     post:
       tags:
         - Configuration
@@ -68,14 +68,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Configuration"
+              $ref: '#/components/schemas/Configuration'
       responses:
         "201":
           description: Successfully created a configuration
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Configuration"
+                $ref: '#/components/schemas/Configuration'
 
   /version:
     get:
@@ -133,13 +133,13 @@ paths:
             type: string
             example: 99
       responses:
-        200:
+        "200":
           description: Successfully returned dashboard template
           content:
             application/json:
               schema:
-                $ref: "https://raw.githubusercontent.com/eliona-smart-building-assistant/eliona-api/main/openapi.yaml#/components/schemas/Dashboard"
-        404:
+                $ref: 'https://raw.githubusercontent.com/eliona-smart-building-assistant/eliona-api/main/openapi.yaml#/components/schemas/Dashboard'
+        "404":
           description: Template name not found
 
 components:
