@@ -35,7 +35,7 @@ type VersionApiService struct {
 }
 
 // NewVersionApiService creates a default api service
-func NewVersionApiService() apiserver.VersionApiServicer {
+func NewVersionApiService() apiserver.VersionAPIServicer {
 	return &VersionApiService{}
 }
 

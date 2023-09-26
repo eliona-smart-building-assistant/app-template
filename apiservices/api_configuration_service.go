@@ -29,7 +29,7 @@ type ConfigurationApiService struct {
 }
 
 // NewConfigurationApiService creates a default api service
-func NewConfigurationApiService() apiserver.ConfigurationApiServicer {
+func NewConfigurationApiService() apiserver.ConfigurationAPIServicer {
 	return &ConfigurationApiService{}
 }
 

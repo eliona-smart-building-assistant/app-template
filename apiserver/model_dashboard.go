@@ -54,14 +54,7 @@ func AssertDashboardRequired(obj Dashboard) error {
 	return nil
 }
 
-// AssertRecurseDashboardRequired recursively checks if required fields are not zero-ed in a nested slice.
-// Accepts only nested slice of Dashboard (e.g. [][]Dashboard), otherwise ErrTypeAssertionError is thrown.
-func AssertRecurseDashboardRequired(objSlice interface{}) error {
-	return AssertRecurseInterfaceRequired(objSlice, func(obj interface{}) error {
-		aDashboard, ok := obj.(Dashboard)
-		if !ok {
-			return ErrTypeAssertionError
-		}
-		return AssertDashboardRequired(aDashboard)
-	})
+// AssertDashboardConstraints checks if the values respects the defined constraints
+func AssertDashboardConstraints(obj Dashboard) error {
+	return nil
 }

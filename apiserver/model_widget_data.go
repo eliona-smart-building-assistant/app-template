@@ -30,14 +30,7 @@ func AssertWidgetDataRequired(obj WidgetData) error {
 	return nil
 }
 
-// AssertRecurseWidgetDataRequired recursively checks if required fields are not zero-ed in a nested slice.
-// Accepts only nested slice of WidgetData (e.g. [][]WidgetData), otherwise ErrTypeAssertionError is thrown.
-func AssertRecurseWidgetDataRequired(objSlice interface{}) error {
-	return AssertRecurseInterfaceRequired(objSlice, func(obj interface{}) error {
-		aWidgetData, ok := obj.(WidgetData)
-		if !ok {
-			return ErrTypeAssertionError
-		}
-		return AssertWidgetDataRequired(aWidgetData)
-	})
+// AssertWidgetDataConstraints checks if the values respects the defined constraints
+func AssertWidgetDataConstraints(obj WidgetData) error {
+	return nil
 }

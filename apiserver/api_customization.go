@@ -16,25 +16,25 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// CustomizationApiController binds http requests to an api service and writes the service results to the http response
-type CustomizationApiController struct {
-	service      CustomizationApiServicer
+// CustomizationAPIController binds http requests to an api service and writes the service results to the http response
+type CustomizationAPIController struct {
+	service      CustomizationAPIServicer
 	errorHandler ErrorHandler
 }
 
-// CustomizationApiOption for how the controller is set up.
-type CustomizationApiOption func(*CustomizationApiController)
+// CustomizationAPIOption for how the controller is set up.
+type CustomizationAPIOption func(*CustomizationAPIController)
 
-// WithCustomizationApiErrorHandler inject ErrorHandler into controller
-func WithCustomizationApiErrorHandler(h ErrorHandler) CustomizationApiOption {
-	return func(c *CustomizationApiController) {
+// WithCustomizationAPIErrorHandler inject ErrorHandler into controller
+func WithCustomizationAPIErrorHandler(h ErrorHandler) CustomizationAPIOption {
+	return func(c *CustomizationAPIController) {
 		c.errorHandler = h
 	}
 }
 
-// NewCustomizationApiController creates a default api controller
-func NewCustomizationApiController(s CustomizationApiServicer, opts ...CustomizationApiOption) Router {
-	controller := &CustomizationApiController{
+// NewCustomizationAPIController creates a default api controller
+func NewCustomizationAPIController(s CustomizationAPIServicer, opts ...CustomizationAPIOption) Router {
+	controller := &CustomizationAPIController{
 		service:      s,
 		errorHandler: DefaultErrorHandler,
 	}
@@ -46,11 +46,10 @@ func NewCustomizationApiController(s CustomizationApiServicer, opts ...Customiza
 	return controller
 }
 
-// Routes returns all the api routes for the CustomizationApiController
-func (c *CustomizationApiController) Routes() Routes {
+// Routes returns all the api routes for the CustomizationAPIController
+func (c *CustomizationAPIController) Routes() Routes {
 	return Routes{
-		{
-			"GetDashboardTemplateByName",
+		"GetDashboardTemplateByName": Route{
 			strings.ToUpper("Get"),
 			"/v1/dashboard-templates/{dashboard-template-name}",
 			c.GetDashboardTemplateByName,
@@ -59,11 +58,10 @@ func (c *CustomizationApiController) Routes() Routes {
 }
 
 // GetDashboardTemplateByName - Get a full dashboard template
-func (c *CustomizationApiController) GetDashboardTemplateByName(w http.ResponseWriter, r *http.Request) {
+func (c *CustomizationAPIController) GetDashboardTemplateByName(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	query := r.URL.Query()
 	dashboardTemplateNameParam := params["dashboard-template-name"]
-
 	projectIdParam := query.Get("projectId")
 	result, err := c.service.GetDashboardTemplateByName(r.Context(), dashboardTemplateNameParam, projectIdParam)
 	// If an error occurred, encode the error with the status code
@@ -73,5 +71,4 @@ func (c *CustomizationApiController) GetDashboardTemplateByName(w http.ResponseW
 	}
 	// If no error, encode the body and the result code
 	EncodeJSONResponse(result.Body, &result.Code, w)
-
 }

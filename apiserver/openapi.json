@@ -13,7 +13,7 @@
     "url" : "http://template/v1"
   } ],
   "tags" : [ {
-    "description" : "Configuration stuff for app template",
+    "description" : "Configure the app",
     "externalDocs" : {
       "url" : "https://github.com/eliona-smart-building-assistant/app-template"
     },
@@ -25,7 +25,7 @@
     },
     "name" : "Version"
   }, {
-    "description" : "Help to customize Eliona",
+    "description" : "Help to customize Eliona environment",
     "externalDocs" : {
       "url" : "https://github.com/eliona-smart-building-assistant/app-template"
     },
@@ -34,7 +34,7 @@
   "paths" : {
     "/configurations" : {
       "get" : {
-        "description" : "Gets information about configurations.",
+        "description" : "Gets information about all configurations.",
         "operationId" : "getConfigurations",
         "responses" : {
           "200" : {
@@ -48,14 +48,14 @@
                 }
               }
             },
-            "description" : "Successfully returned example configurations"
+            "description" : "Successfully returned all configurations"
           }
         },
-        "summary" : "Get example configurations",
+        "summary" : "Get configurations",
         "tags" : [ "Configuration" ]
       },
       "post" : {
-        "description" : "Creates an example configuration.",
+        "description" : "Creates a configuration.",
         "operationId" : "postConfiguration",
         "requestBody" : {
           "content" : {
@@ -75,10 +75,10 @@
                 }
               }
             },
-            "description" : "Successfully created an example configuration"
+            "description" : "Successfully created a configuration"
           }
         },
-        "summary" : "Creates an example configuration",
+        "summary" : "Creates a configuration",
         "tags" : [ "Configuration" ]
       }
     },

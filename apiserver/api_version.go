@@ -14,25 +14,25 @@ import (
 	"strings"
 )
 
-// VersionApiController binds http requests to an api service and writes the service results to the http response
-type VersionApiController struct {
-	service      VersionApiServicer
+// VersionAPIController binds http requests to an api service and writes the service results to the http response
+type VersionAPIController struct {
+	service      VersionAPIServicer
 	errorHandler ErrorHandler
 }
 
-// VersionApiOption for how the controller is set up.
-type VersionApiOption func(*VersionApiController)
+// VersionAPIOption for how the controller is set up.
+type VersionAPIOption func(*VersionAPIController)
 
-// WithVersionApiErrorHandler inject ErrorHandler into controller
-func WithVersionApiErrorHandler(h ErrorHandler) VersionApiOption {
-	return func(c *VersionApiController) {
+// WithVersionAPIErrorHandler inject ErrorHandler into controller
+func WithVersionAPIErrorHandler(h ErrorHandler) VersionAPIOption {
+	return func(c *VersionAPIController) {
 		c.errorHandler = h
 	}
 }
 
-// NewVersionApiController creates a default api controller
-func NewVersionApiController(s VersionApiServicer, opts ...VersionApiOption) Router {
-	controller := &VersionApiController{
+// NewVersionAPIController creates a default api controller
+func NewVersionAPIController(s VersionAPIServicer, opts ...VersionAPIOption) Router {
+	controller := &VersionAPIController{
 		service:      s,
 		errorHandler: DefaultErrorHandler,
 	}
@@ -44,17 +44,15 @@ func NewVersionApiController(s VersionApiServicer, opts ...VersionApiOption) Rou
 	return controller
 }
 
-// Routes returns all the api routes for the VersionApiController
-func (c *VersionApiController) Routes() Routes {
+// Routes returns all the api routes for the VersionAPIController
+func (c *VersionAPIController) Routes() Routes {
 	return Routes{
-		{
-			"GetOpenAPI",
+		"GetOpenAPI": Route{
 			strings.ToUpper("Get"),
 			"/v1/version/openapi.json",
 			c.GetOpenAPI,
 		},
-		{
-			"GetVersion",
+		"GetVersion": Route{
 			strings.ToUpper("Get"),
 			"/v1/version",
 			c.GetVersion,
@@ -63,7 +61,7 @@ func (c *VersionApiController) Routes() Routes {
 }
 
 // GetOpenAPI - OpenAPI specification for this API version
-func (c *VersionApiController) GetOpenAPI(w http.ResponseWriter, r *http.Request) {
+func (c *VersionAPIController) GetOpenAPI(w http.ResponseWriter, r *http.Request) {
 	result, err := c.service.GetOpenAPI(r.Context())
 	// If an error occurred, encode the error with the status code
 	if err != nil {
@@ -72,11 +70,10 @@ func (c *VersionApiController) GetOpenAPI(w http.ResponseWriter, r *http.Request
 	}
 	// If no error, encode the body and the result code
 	EncodeJSONResponse(result.Body, &result.Code, w)
-
 }
 
 // GetVersion - Version of the API
-func (c *VersionApiController) GetVersion(w http.ResponseWriter, r *http.Request) {
+func (c *VersionAPIController) GetVersion(w http.ResponseWriter, r *http.Request) {
 	result, err := c.service.GetVersion(r.Context())
 	// If an error occurred, encode the error with the status code
 	if err != nil {
@@ -85,5 +82,4 @@ func (c *VersionApiController) GetVersion(w http.ResponseWriter, r *http.Request
 	}
 	// If no error, encode the body and the result code
 	EncodeJSONResponse(result.Body, &result.Code, w)
-
 }
