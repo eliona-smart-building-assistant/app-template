@@ -17,6 +17,8 @@
 -- The only thing that remains after testing then are the incremented auto-increment values and app
 -- registration (which you can optionally remove as well by uncommenting the last command).
 
+SET SCHEMA 'public';
+
 DELETE FROM versioning.patches
 WHERE app_name = 'template';
 
