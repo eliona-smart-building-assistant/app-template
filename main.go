@@ -17,10 +17,10 @@ package main
 
 import (
 	"template/conf"
-	"template/eliona"
 	"time"
 
 	"github.com/eliona-smart-building-assistant/go-eliona/app"
+	"github.com/eliona-smart-building-assistant/go-eliona/asset"
 	"github.com/eliona-smart-building-assistant/go-utils/common"
 	"github.com/eliona-smart-building-assistant/go-utils/db"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
@@ -50,7 +50,7 @@ func main() {
 	app.Init(db.Pool(), app.AppName(),
 		app.ExecSqlFile("conf/init.sql"),
 		conf.InitConfiguration,
-		eliona.InitEliona,
+		asset.InitAssetTypeFiles("eliona/asset-type-*.json"),
 	)
 
 	// Starting the service to collect the data for this app.
