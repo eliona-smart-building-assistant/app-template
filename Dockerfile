@@ -21,13 +21,12 @@ WORKDIR /
 COPY . ./
 
 RUN go mod download
-RUN go build -o ../app
 
 RUN DATE=$(date) && \
     GIT_COMMIT=$(git rev-list -1 HEAD) && \
     go build -ldflags "-X 'template/apiservices.BuildTimestamp=$DATE' -X 'template/apiservices.GitCommit=$GIT_COMMIT'" -o ../app
 
-FROM eliona/base-alpine:latest-3.17 AS target
+FROM eliona/base-alpine:latest-3.18 AS target
 
 COPY --from=build /app ./
 COPY conf/*.sql ./conf/
