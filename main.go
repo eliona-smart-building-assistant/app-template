@@ -49,8 +49,8 @@ func main() {
 	// Init the app before the first run.
 	app.Init(db.Pool(), app.AppName(),
 		app.ExecSqlFile("conf/init.sql"),
-		asset.InitAssetTypeFiles("eliona/asset-type-*.json"),
-		dashboard.InitWidgetTypeFiles("eliona/widget-type-*.json"),
+		asset.InitAssetTypeFiles("resources/asset-types/*.json"),
+		dashboard.InitWidgetTypeFiles("resources/widget-types/*.json"),
 	)
 
 	// Starting the service to collect the data for this app.
