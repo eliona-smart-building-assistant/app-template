@@ -1,0 +1,1 @@
+Add files to this directory with resources like asset type json files.
