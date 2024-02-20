@@ -22,19 +22,19 @@ import (
 	"template/apiserver"
 )
 
-// ConfigurationApiService is a service that implements the logic for the ConfigurationApiServicer
-// This service should implement the business logic for every endpoint for the ConfigurationApi API.
+// ConfigurationAPIService is a service that implements the logic for the ConfigurationAPIServicer
+// This service should implement the business logic for every endpoint for the ConfigurationAPI API.
 // Include any external packages or services that will be required by this service.
-type ConfigurationApiService struct {
+type ConfigurationAPIService struct {
 }
 
-// NewConfigurationApiService creates a default api service
-func NewConfigurationApiService() apiserver.ConfigurationAPIServicer {
-	return &ConfigurationApiService{}
+// NewConfigurationAPIService creates a default api service
+func NewConfigurationAPIService() apiserver.ConfigurationAPIServicer {
+	return &ConfigurationAPIService{}
 }
 
 // GetConfigurations - Get example configurations
-func (s *ConfigurationApiService) GetConfigurations(ctx context.Context) (apiserver.ImplResponse, error) {
+func (s *ConfigurationAPIService) GetConfigurations(ctx context.Context) (apiserver.ImplResponse, error) {
 	// TODO - update GetConfigurations with the required logic for this service method.
 	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
 
@@ -45,7 +45,7 @@ func (s *ConfigurationApiService) GetConfigurations(ctx context.Context) (apiser
 }
 
 // PostConfiguration - Creates an example configuration
-func (s *ConfigurationApiService) PostConfiguration(ctx context.Context, configuration apiserver.Configuration) (apiserver.ImplResponse, error) {
+func (s *ConfigurationAPIService) PostConfiguration(ctx context.Context, configuration apiserver.Configuration) (apiserver.ImplResponse, error) {
 	// TODO - update PostConfiguration with the required logic for this service method.
 	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
 

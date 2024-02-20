@@ -60,9 +60,25 @@ func (c *CustomizationAPIController) Routes() Routes {
 // GetDashboardTemplateByName - Get a full dashboard template
 func (c *CustomizationAPIController) GetDashboardTemplateByName(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	query := r.URL.Query()
+	query, err := parseQuery(r.URL.RawQuery)
+	if err != nil {
+		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
+		return
+	}
 	dashboardTemplateNameParam := params["dashboard-template-name"]
-	projectIdParam := query.Get("projectId")
+	if dashboardTemplateNameParam == "" {
+		c.errorHandler(w, r, &RequiredError{"dashboard-template-name"}, nil)
+		return
+	}
+	var projectIdParam string
+	if query.Has("projectId") {
+		param := query.Get("projectId")
+
+		projectIdParam = param
+	} else {
+		c.errorHandler(w, r, &RequiredError{Field: "projectId"}, nil)
+		return
+	}
 	result, err := c.service.GetDashboardTemplateByName(r.Context(), dashboardTemplateNameParam, projectIdParam)
 	// If an error occurred, encode the error with the status code
 	if err != nil {

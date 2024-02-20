@@ -21,19 +21,19 @@ import (
 	"template/apiserver"
 )
 
-// CustomizationApiService is a service that implements the logic for the CustomizationApiServicer
-// This service should implement the business logic for every endpoint for the CustomizationApi API.
+// CustomizationAPIService is a service that implements the logic for the CustomizationAPIServicer
+// This service should implement the business logic for every endpoint for the CustomizationAPI API.
 // Include any external packages or services that will be required by this service.
-type CustomizationApiService struct {
+type CustomizationAPIService struct {
 }
 
-// NewCustomizationApiService creates a default api service
-func NewCustomizationApiService() apiserver.CustomizationAPIServicer {
-	return &CustomizationApiService{}
+// NewCustomizationAPIService creates a default api service
+func NewCustomizationAPIService() apiserver.CustomizationAPIServicer {
+	return &CustomizationAPIService{}
 }
 
 // GetDashboardTemplateByName - Get a full dashboard template
-func (s *CustomizationApiService) GetDashboardTemplateByName(ctx context.Context, dashboardTemplateName string, projectId string) (apiserver.ImplResponse, error) {
+func (s *CustomizationAPIService) GetDashboardTemplateByName(ctx context.Context, dashboardTemplateName string, projectId string) (apiserver.ImplResponse, error) {
 	if dashboardTemplateName == "Template" {
 		return apiserver.ImplResponse{Code: http.StatusNotImplemented}, nil
 	} else {

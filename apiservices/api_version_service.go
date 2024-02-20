@@ -28,19 +28,19 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// VersionApiService is a service that implements the logic for the VersionApiServicer
-// This service should implement the business logic for every endpoint for the VersionApi API.
+// VersionAPIService is a service that implements the logic for the VersionAPIServicer
+// This service should implement the business logic for every endpoint for the VersionAPI API.
 // Include any external packages or services that will be required by this service.
-type VersionApiService struct {
+type VersionAPIService struct {
 }
 
-// NewVersionApiService creates a default api service
-func NewVersionApiService() apiserver.VersionAPIServicer {
-	return &VersionApiService{}
+// NewVersionAPIService creates a default api service
+func NewVersionAPIService() apiserver.VersionAPIServicer {
+	return &VersionAPIService{}
 }
 
 // GetOpenAPI - OpenAPI specification for this API version
-func (s *VersionApiService) GetOpenAPI(ctx context.Context) (apiserver.ImplResponse, error) {
+func (s *VersionAPIService) GetOpenAPI(ctx context.Context) (apiserver.ImplResponse, error) {
 	bytes, err := os.ReadFile("openapi.yaml")
 	if err != nil {
 		log.Error("services", "%s: %v", "GetOpenAPI", err)
@@ -67,7 +67,7 @@ var BuildTimestamp string // injected during linking, see Dockerfile
 var GitCommit string      // injected during linking, see Dockerfile
 
 // GetVersion - Version of the API
-func (s *VersionApiService) GetVersion(ctx context.Context) (apiserver.ImplResponse, error) {
+func (s *VersionAPIService) GetVersion(ctx context.Context) (apiserver.ImplResponse, error) {
 	return apiserver.Response(http.StatusOK, common.Ptr(version())), nil
 }
 
