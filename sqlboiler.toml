@@ -8,7 +8,7 @@ add-enum-types = true
 [psql]
 dbname = "postgres"
 host   = "localhost"
-port   = 5432
+port   = 60001
 user   = "postgres"
 pass   = "secret"
 schema = "template"
