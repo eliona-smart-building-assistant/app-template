@@ -17,6 +17,7 @@
   "documentationUrl": "https://doc.eliona.io/eliona/referenzen/app-entwicklung",
   "useEnvironment": [
     "CONNECTION_STRING",
+    "INIT_CONNECTION_STRING",
     "API_ENDPOINT",
     "API_TOKEN"
   ]
