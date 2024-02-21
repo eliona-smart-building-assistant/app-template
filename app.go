@@ -16,6 +16,11 @@
 package main
 
 import (
+	"context"
+	"github.com/eliona-smart-building-assistant/go-eliona/app"
+	"github.com/eliona-smart-building-assistant/go-eliona/asset"
+	"github.com/eliona-smart-building-assistant/go-eliona/dashboard"
+	"github.com/eliona-smart-building-assistant/go-utils/db"
 	"net/http"
 	"template/apiserver"
 	"template/apiservices"
@@ -24,6 +29,21 @@ import (
 	utilshttp "github.com/eliona-smart-building-assistant/go-utils/http"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
 )
+
+func initialization() {
+	ctx := context.Background()
+
+	// Necessary to close used init resources
+	conn := db.NewInitConnectionWithContextAndApplicationName(ctx, app.AppName())
+	defer conn.Close(ctx)
+
+	// Init the app before the first run.
+	app.Init(db.Pool(), app.AppName(),
+		app.ExecSqlFile("conf/init.sql"),
+		asset.InitAssetTypeFiles("resources/asset-types/*.json"),
+		dashboard.InitWidgetTypeFiles("resources/widget-types/*.json"),
+	)
+}
 
 // doAnything is the main app function which is called periodically
 func doAnything() {
