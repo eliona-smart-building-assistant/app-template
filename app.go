@@ -38,7 +38,7 @@ func initialization() {
 	defer conn.Close(ctx)
 
 	// Init the app before the first run.
-	app.Init(db.Pool(), app.AppName(),
+	app.Init(conn, app.AppName(),
 		app.ExecSqlFile("conf/init.sql"),
 		asset.InitAssetTypeFiles("resources/asset-types/*.json"),
 		dashboard.InitWidgetTypeFiles("resources/widget-types/*.json"),
