@@ -1,6 +1,6 @@
 module template
 
-go 1.20
+go 1.22
 
 require (
 	github.com/eliona-smart-building-assistant/app-integration-tests v1.1.4
