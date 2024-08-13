@@ -1,5 +1,5 @@
-output   = "appdb"
-pkgname  = "appdb"
+output   = "db/generated"
+pkgname  = "dbgen"
 add-global-variants = true
 wipe     = true
 no-tests = true

@@ -15,6 +15,47 @@
 
 package eliona
 
-//
-// Todo: Define anything for eliona like writing assets or heap data
-//
+import (
+	appmodel "app-name/app/model"
+	"fmt"
+
+	api "github.com/eliona-smart-building-assistant/go-eliona-api-client/v2"
+	"github.com/eliona-smart-building-assistant/go-eliona/asset"
+	"github.com/eliona-smart-building-assistant/go-eliona/client"
+	"github.com/eliona-smart-building-assistant/go-utils/log"
+)
+
+func CreateAssets(config appmodel.Configuration, root asset.Root) error {
+	for _, projectId := range config.ProjectIDs {
+		assetsCreated, err := asset.CreateAssets(root, projectId)
+		if err != nil {
+			return err
+		}
+		if assetsCreated != 0 {
+			if err := notifyUser(config.UserId, projectId, assetsCreated); err != nil {
+				return fmt.Errorf("notifying user about CAC: %v", err)
+			}
+		}
+	}
+	return nil
+}
+
+func notifyUser(userId string, projectId string, assetsCreated int) error {
+	receipt, _, err := client.NewClient().CommunicationAPI.
+		PostNotification(client.AuthenticationContext()).
+		Notification(
+			api.Notification{
+				User:      userId,
+				ProjectId: *api.NewNullableString(&projectId),
+				Message: *api.NewNullableTranslation(&api.Translation{
+					De: api.PtrString(fmt.Sprintf("App Name App hat %d neue Assets angelegt. Diese sind nun im Asset-Management verfügbar.", assetsCreated)),
+					En: api.PtrString(fmt.Sprintf("App Name app added %v new assets. They are now available in Asset Management.", assetsCreated)),
+				}),
+			}).
+		Execute()
+	log.Debug("eliona", "posted notification about CAC: %v", receipt)
+	if err != nil {
+		return fmt.Errorf("posting CAC notification: %v", err)
+	}
+	return nil
+}

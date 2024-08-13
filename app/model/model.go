@@ -13,8 +13,30 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package conf
+package appmodel
 
-//
-// Todo: Define anything for configuration like structures and methods to read and process configuration
-//
+type Configuration struct {
+	Id                int64
+	ApiAccessChangeMe string
+	RefreshInterval   int32
+	RequestTimeout    int32
+	AssetFilter       [][]FilterRule
+	Enable            bool
+	Active            bool
+	ProjectIDs        []string
+	UserId            string
+}
+
+type FilterRule struct {
+	Parameter string
+	Regex     string
+}
+
+type Asset struct {
+	ID            int64
+	Config        Configuration
+	ProjectID     string
+	GlobalAssetID string
+	ProviderID    string
+	AssetID       int32
+}

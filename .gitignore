@@ -1,5 +1,5 @@
 *.iml
 .idea/**
-apiserver/.openapi-generator/**
-apiserver/api/**
-apiserver/*_service.go
+api/generated/.openapi-generator/**
+api/generated/api/**
+api/generated/*_service.go

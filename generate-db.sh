@@ -5,11 +5,11 @@ go get github.com/volatiletech/sqlboiler/v4
 go get github.com/volatiletech/null/v8
 
 # Read the content of init.sql
-INIT_SQL_CONTENT=$(<"${PWD}/conf/init.sql")
+INIT_SQL_CONTENT=$(<"${PWD}/db/init.sql")
 
 # Create init_wrapper.sql to run the script in a transaction. This is needed for
 # COMMIT AND CHAIN to work in the script.
-cat << EOF > ./conf/init_wrapper.sql
+cat << EOF > ./db/init_wrapper.sql
 BEGIN;
 
 $INIT_SQL_CONTENT
@@ -22,14 +22,14 @@ docker run -d \
     --platform "linux/amd64" \
     -e "POSTGRES_PASSWORD=secret" \
     -p "6001:5432" \
-    -v "${PWD}/conf/init_wrapper.sql:/docker-entrypoint-initdb.d/init_wrapper.sql" \
+    -v "${PWD}/db/init_wrapper.sql:/docker-entrypoint-initdb.d/init_wrapper.sql" \
     debezium/postgres:12
 
 # Wait for PostgreSQL to initialize
 sleep 5
 
 sqlboiler psql \
-    -c sqlboiler.toml \
+    -c db/sqlboiler.toml \
     --wipe --no-tests
 
 docker stop "app_sql_boiler_code_generation" > /dev/null
@@ -40,6 +40,6 @@ docker logs "app_sql_boiler_code_generation" 2>&1 | grep "ERROR" || {
 
 docker rm "app_sql_boiler_code_generation" > /dev/null
 
-rm ./conf/init_wrapper.sql
+rm ./db/init_wrapper.sql
 
 go mod tidy

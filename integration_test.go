@@ -18,5 +18,5 @@ func TestApp(t *testing.T) {
 func schema(t *testing.T) {
 	t.Parallel()
 
-	assert.SchemaExists(t, "app_schema_name", []string{})
+	assert.SchemaExists(t, "app_schema_name", []string{"configuration", "asset"})
 }

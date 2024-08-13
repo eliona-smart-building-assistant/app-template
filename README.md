@@ -40,13 +40,13 @@ This initialization can be handled by the `reset.sql` script.
 
 ### Database tables ###
 
-<mark>Todo: Describe the database objects the app needs for configuration</mark>
-
-<mark>Todo: Decide if the app uses its own data and which data should be accessible from outside the app. This is always the case with configuration data. If so, the app needs its own API server to provide access to this data. To define the API use an openapi.yaml file and generators to build the server stub.</mark>
+<mark>Todo: Describe other tables if the app needs them.</mark>
 
 The app requires configuration data that remains in the database. To do this, the app creates its own database schema `app_schema_name` during initialization. To modify and handle the configuration data the app provides an API access. Have a look at the [API specification](https://eliona-smart-building-assistant.github.io/open-api-docs/?https://raw.githubusercontent.com/eliona-smart-building-assistant/app-name-app/develop/openapi.yaml) how the configuration tables should be used.
 
-- `app_schema_name.example_table`: <mark>Todo: Describe the database table in short.</mark>
+- `app_schema_name.configuration`: Contains configuration of the app. Editable through the API.
+
+- `app_schema_name.asset`: Provides asset mapping. Maps broker's asset IDs to Eliona asset IDs.
 
 **Generation**: to generate access method to database see Generation section below.
 
@@ -57,15 +57,35 @@ The app requires configuration data that remains in the database. To do this, th
 
 The app provides its own API to access configuration data and other functions. The full description of the API is defined in the `openapi.yaml` OpenAPI definition file.
 
-- [API Reference](https://eliona-smart-building-assistant.github.io/open-api-docs/?https://raw.githubusercontent.com/eliona-smart-building-assistant/app-name-app/develop/openapi.yaml) shows Details of the API
+- [API Reference](https://eliona-smart-building-assistant.github.io/open-api-docs/?https://raw.githubusercontent.com/eliona-smart-building-assistant/app-name-app/develop/openapi.yaml) shows details of the API
 
 **Generation**: to generate api server stub see Generation section below.
 
 
-### Eliona ###
+### Eliona assets ###
 
-<mark>Todo: Describe all the data the app writes to eliona</mark>
+This app creates Eliona asset types and attribute sets during initialization.
 
+The data is written for each device, structured into different subtypes of Eliona assets. The following subtypes are defined:
+
+- `Info`: Static data which provides information about a device like address and firmware info.
+- `Status`: Device status information, like battery level.
+- `Input`: Current values reported by sensors.
+- `Output`: Values that are to be passed back to the provider.
+
+### Continuous asset creation ###
+
+Assets for all devices connected to the App Name account are created automatically when the configuration is added.
+
+To select which assets to create, a filter could be specified in config. The schema of the filter is defined in the `openapi.yaml` file.
+
+Possible filter parameters are defined in the structs in `broker.go` and marked with `eliona:"attribute_name,filterable"` field tag.
+
+To avoid conflicts, the Global Asset Identifier is a manufacturer's ID prefixed with asset type name as a namespace.
+
+### Dashboard ###
+
+An example dashboard meant for a quick start or showcasing the apps abilities can be obtained by accessing the dashboard endpoint defined in the `openapi.yaml` file.
 
 ## Tools
 
@@ -80,9 +100,13 @@ For the API server the [OpenAPI Generator](https://openapi-generator.tech/docs/g
 
 ### Generate Database access ###
 
-For the database access [SQLBoiler](https://github.com/volatiletech/sqlboiler) is used. The easiest way to generate the database files is to use one of the predefined generation script which use the SQLBoiler implementation. Please note that the database connection in the `sqlboiler.toml` file have to be configured.
+For the database access [SQLBoiler](https://github.com/volatiletech/sqlboiler) is used. The easiest way to generate the database files is to use one of the predefined generation script which use the SQLBoiler implementation.
 
 ```
 .\generate-db.cmd # Windows
 ./generate-db.sh # Linux
 ```
+
+### Generate asset type descriptions ###
+
+For generating asset type descriptions from field-tag-annotated structs, [asset-from-struct tool](https://github.com/eliona-smart-building-assistant/dev-utilities) can be used.

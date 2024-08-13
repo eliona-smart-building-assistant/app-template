@@ -19,8 +19,11 @@ import (
 // The ConfigurationAPIRouter implementation should parse necessary information from the http request,
 // pass the data to a ConfigurationAPIServicer to perform the required actions, then write the service results to the http response.
 type ConfigurationAPIRouter interface {
+	DeleteConfigurationById(http.ResponseWriter, *http.Request)
+	GetConfigurationById(http.ResponseWriter, *http.Request)
 	GetConfigurations(http.ResponseWriter, *http.Request)
 	PostConfiguration(http.ResponseWriter, *http.Request)
+	PutConfigurationById(http.ResponseWriter, *http.Request)
 }
 
 // CustomizationAPIRouter defines the required methods for binding the api requests to a responses for the CustomizationAPI
@@ -43,8 +46,11 @@ type VersionAPIRouter interface {
 // while the service implementation can be ignored with the .openapi-generator-ignore file
 // and updated with the logic required for the API.
 type ConfigurationAPIServicer interface {
+	DeleteConfigurationById(context.Context, int64) (ImplResponse, error)
+	GetConfigurationById(context.Context, int64) (ImplResponse, error)
 	GetConfigurations(context.Context) (ImplResponse, error)
 	PostConfiguration(context.Context, Configuration) (ImplResponse, error)
+	PutConfigurationById(context.Context, int64, Configuration) (ImplResponse, error)
 }
 
 // CustomizationAPIServicer defines the api actions for the CustomizationAPI service

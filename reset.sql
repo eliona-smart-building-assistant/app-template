@@ -34,9 +34,9 @@ DROP SCHEMA IF EXISTS app_schema_name CASCADE;
 
 DELETE FROM heap
 WHERE asset_id IN (
-    SELECT asset_id
-    FROM asset
-    WHERE asset_type LIKE E'app\\_schema\\_name\\_%'
+	SELECT asset_id
+	FROM asset
+	WHERE asset_type LIKE E'app\\_schema\\_name\\_%'
 );
 
 DELETE FROM attribute_schema
@@ -50,17 +50,17 @@ WHERE asset_type LIKE E'app\\_schema\\_name\\_%';
 
 DELETE FROM public.widget_data
 WHERE widget_id IN (
-    SELECT public.widget.id
-    FROM public.widget
-             JOIN public.dashboard USING (dashboard_id)
-    WHERE public.dashboard.name LIKE 'App Name%'
+	SELECT public.widget.id
+	FROM public.widget
+		JOIN public.dashboard USING (dashboard_id)
+	WHERE public.dashboard.name LIKE 'App Name%'
 );
 
 DELETE FROM public.widget
 WHERE dashboard_id IN (
-    SELECT dashboard_id
-    FROM public.dashboard
-    WHERE name LIKE 'App Name%'
+	SELECT dashboard_id
+	FROM public.dashboard
+	WHERE name LIKE 'App Name%'
 );
 
 DELETE FROM public.dashboard

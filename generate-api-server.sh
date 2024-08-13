@@ -8,7 +8,7 @@ docker run --rm \
     --git-user-id eliona-smart-building-assistant \
     --git-repo-id python-eliona-api-client \
     -i /local/openapi.yaml \
-    -o /local/apiserver \
+    -o /local/api/generated \
     --additional-properties="packageName=apiserver,sourceFolder=,outputAsLibrary=true"
 
-goimports -w ./apiserver
+goimports -w ./api/generated

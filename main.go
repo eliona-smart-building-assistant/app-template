@@ -16,9 +16,10 @@
 package main
 
 import (
+	"app-name/app"
 	"time"
 
-	"github.com/eliona-smart-building-assistant/go-eliona/app"
+	elionaapp "github.com/eliona-smart-building-assistant/go-eliona/app"
 	"github.com/eliona-smart-building-assistant/go-utils/common"
 	"github.com/eliona-smart-building-assistant/go-utils/db"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
@@ -31,7 +32,7 @@ func main() {
 	log.Info("main", "Starting the app.")
 
 	// Set default database to use boil.*G functions.
-	database := db.Database(app.AppName())
+	database := db.Database(elionaapp.AppName())
 	defer database.Close()
 	boil.SetDB(database)
 
@@ -45,12 +46,13 @@ func main() {
 	defer db.ClosePool()
 
 	// Initialize the app
-	initialization()
+	app.Initialize()
 
 	// Starting the service to collect the data for this app.
 	common.WaitForWithOs(
-		common.Loop(doAnything, time.Second),
-		listenApi,
+		common.Loop(app.CollectData, time.Second),
+		app.ListenApi,
+		app.ListenForOutputChanges,
 	)
 
 	log.Info("main", "Terminate the app.")

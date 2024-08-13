@@ -49,7 +49,7 @@ tags:
       url: https://github.com/eliona-smart-building-assistant/app-name-app
 
 paths:
-  /configurations:
+  /configs:
     get:
       tags:
         - Configuration
@@ -64,7 +64,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Configuration'
+                  $ref: "#/components/schemas/Configuration"
     post:
       tags:
         - Configuration
@@ -75,14 +75,66 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Configuration'
+              $ref: "#/components/schemas/Configuration"
       responses:
         "201":
           description: Successfully created a configuration
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Configuration'
+                $ref: "#/components/schemas/Configuration"
+
+  /configs/{config-id}:
+    get:
+      tags:
+        - Configuration
+      summary: Get configuration
+      description: Gets information about the configuration with the given id
+      parameters:
+        - $ref: "#/components/parameters/config-id"
+      operationId: getConfigurationById
+      responses:
+        "200":
+          description: Successfully returned configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration"
+        "400":
+          description: Bad request
+    put:
+      tags:
+        - Configuration
+      summary: Updates a configuration
+      description: Updates a configuration
+      parameters:
+        - $ref: "#/components/parameters/config-id"
+      operationId: putConfigurationById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Configuration"
+      responses:
+        "200":
+          description: Successfully updated a configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration"
+    delete:
+      tags:
+        - Configuration
+      summary: Deletes a configuration
+      description: Removes information about the configuration with the given id
+      parameters:
+        - $ref: "#/components/parameters/config-id"
+      operationId: deleteConfigurationById
+      responses:
+        "204":
+          description: Successfully deleted configured configuration
+        "400":
+          description: Bad request
 
   /version:
     get:
@@ -145,22 +197,99 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'https://raw.githubusercontent.com/eliona-smart-building-assistant/eliona-api/main/openapi.yaml#/components/schemas/Dashboard'
+                $ref: "https://raw.githubusercontent.com/eliona-smart-building-assistant/eliona-api/main/openapi.yaml#/components/schemas/Dashboard"
         "404":
           description: Template name not found
 
 components:
+  parameters:
+    config-id:
+      name: config-id
+      in: path
+      description: The id of the config
+      example: 4711
+      required: true
+      schema:
+        type: integer
+        format: int64
+        example: 4711
+
   schemas:
     Configuration:
       type: object
-      description: Simply a example configuration
+      description: Each configuration defines access to provider's API.
       properties:
         id:
           type: integer
           format: int64
-          description: A id identifying the example configuration
+          description: Internal identifier for the configured API (created automatically).
           readOnly: true
           nullable: true
-        config:
+        apiAccessChangeMe:
           type: string
-          description: Configuration data for example
+          format: string
+          description: There should be things like API address, access keys and so on.
+          example: 10.10.10.101
+        enable:
+          type: boolean
+          description: Flag to enable or disable fetching from this API
+          default: true
+          nullable: true
+        refreshInterval:
+          type: integer
+          description: Interval in seconds for collecting data from API
+          default: 60
+        requestTimeout:
+          type: integer
+          description: Timeout in seconds
+          default: 120
+          nullable: true
+        assetFilter:
+          $ref: "#/components/schemas/AssetFilter"
+          nullable: true
+          example:
+            [
+              [{ "parameter": "deviceName", "regex": "Main.*" }, { "parameter": "deviceType", "regex": "110" }],
+              [{ "parameter": "macAddress", "regex": "(70:82:0e:12:28:cc|70:56:06:12:.*)" }],
+              [{ "parameter": "ipAddress", "regex": "192\\.168\\..*" }],
+            ]
+        active:
+          type: boolean
+          readOnly: true
+          description: Set to `true` by the app when running and to `false` when app is stopped
+          nullable: true
+        projectIDs:
+          type: array
+          description: List of Eliona project ids for which this device should collect data. For each project id all smart devices are automatically created as an asset in Eliona. The mapping between Eliona is stored as an asset mapping in the KentixONE app.
+          nullable: true
+          items:
+            type: string
+          example:
+            - "42"
+            - "99"
+        userId:
+          type: string
+          readOnly: true
+          description: ID of the last Eliona user who created or updated the configuration
+          nullable: true
+          example: "90"
+
+    AssetFilter:
+      type: array
+      description: Array of rules combined by logical OR
+      items:
+        type: array
+        description: Array of rules combined by logical AND
+        items:
+          $ref: "#/components/schemas/FilterRule"
+
+    FilterRule:
+      type: object
+      description: Asset selection rule. Possible parameters are defined in app's README file.
+      properties:
+        parameter:
+          type: string
+          example: "name"
+        regex:
+          type: string
+          example: "^first_floor_.*$"
