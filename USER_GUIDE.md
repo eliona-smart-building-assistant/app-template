@@ -58,6 +58,10 @@ Once configured, the app starts Continuous Asset Creation (CAC). Discovered reso
 
 <mark>TODO: Describe what resources are created, the hierarchy and the data points.</mark>
 
+### Asset filtering
+
+In case it's not desired to import all assets from App Name to Eliona, it's possible to write an asset filter that would include only matching assets. This app is able to filter the assets by: <mark>TODO</mark>. See [Asset Filter documentation](https://doc.eliona.io/collection/eliona-english/manuals/settings/apps/asset-filter) for instructions on writing asset filters.
+
 ## Additional Features
 
 <mark>TODO: Describe all other features of the app.</mark>
