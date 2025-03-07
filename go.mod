@@ -8,6 +8,7 @@ require (
 	github.com/eliona-smart-building-assistant/go-eliona-api-client/v2 v2.8.2
 	github.com/eliona-smart-building-assistant/go-utils v1.1.5
 	github.com/friendsofgo/errors v0.9.2
+	github.com/go-jet/jet/v2 v2.13.0
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/websocket v1.5.3
 	github.com/volatiletech/null/v8 v8.1.2
@@ -22,9 +23,10 @@ replace github.com/ericlagergren/decimal => github.com/ericlagergren/decimal v0.
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/ericlagergren/decimal v0.0.0-20240411145413-00de7ca16731 // indirect
+	github.com/ericlagergren/decimal v0.0.0-20190420051523-6335edbaa640 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.14.3 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
