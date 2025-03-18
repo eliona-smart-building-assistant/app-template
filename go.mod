@@ -1,6 +1,6 @@
 module app-name
 
-go 1.23
+go 1.24
 
 require (
 	github.com/eliona-smart-building-assistant/app-integration-tests v1.1.6
@@ -35,8 +35,8 @@ require (
 	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
 	github.com/volatiletech/strmangle v0.0.8 // indirect
-	golang.org/x/crypto v0.32.0 // indirect
+	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/image v0.19.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 )
