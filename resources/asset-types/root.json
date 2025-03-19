@@ -1,5 +1,32 @@
 {
-	"attributes": [],
+	"attributes": [
+		{
+			"name": "status",
+			"enable": true,
+			"subtype": "status",
+			"translation": {
+				"de": "Status",
+				"en": "Status"
+			},
+			"isDigital": true,
+			"min": 0,
+			"max": 2,
+			"map": [
+				{
+					"value": 0,
+					"map": "OK"
+				},
+				{
+					"value": 1,
+					"map": "Error"
+				},
+				{
+					"value": 2,
+					"map": "Fatal"
+				}
+			]
+		}
+	],
 	"custom": false,
 	"icon": null,
 	"name": "app_name_root",

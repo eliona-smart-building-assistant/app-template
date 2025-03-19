@@ -37,6 +37,19 @@ import (
 	"github.com/eliona-smart-building-assistant/go-utils/log"
 )
 
+var appStatus = 0
+
+const (
+	statusOK = iota
+	statusError
+	statusFatal
+)
+
+func changeAppStatus(status int) {
+	appStatus = status
+	Heartbeat()
+}
+
 func Initialize() {
 	ctx := context.Background()
 
@@ -58,6 +71,7 @@ func CollectData() {
 	configs, err := dbhelper.GetConfigs(context.Background())
 	if err != nil {
 		log.Fatal("dbhelper", "Couldn't read configs from DB: %v", err)
+		changeAppStatus(statusFatal)
 		return
 	}
 	if len(configs) == 0 {
@@ -92,9 +106,11 @@ func CollectData() {
 		common.RunOnceWithParam(func(config appmodel.Configuration) {
 			log.Info("main", "Collecting %d started.", config.Id)
 			if err := collectResources(&config); err != nil {
+				changeAppStatus(statusError)
 				return // Error is handled in the method itself.
 			}
 			log.Info("main", "Collecting %d finished.", config.Id)
+			changeAppStatus(statusOK)
 
 			time.Sleep(time.Second * time.Duration(config.RefreshInterval))
 		}, config, config.Id)
@@ -112,6 +128,7 @@ func ListenForOutputChanges() {
 		outputs, err := eliona.ListenForOutputChanges()
 		if err != nil {
 			log.Error("eliona", "listening for output changes: %v", err)
+			changeAppStatus(statusError)
 			return
 		}
 		for output := range outputs {
@@ -122,10 +139,12 @@ func ListenForOutputChanges() {
 			asset, err := dbhelper.GetAssetById(output.AssetId)
 			if err != nil {
 				log.Error("dbhelper", "getting asset by assetID %v: %v", output.AssetId, err)
+				changeAppStatus(statusError)
 				return
 			}
 			if err := outputData(asset, output.Data); err != nil {
 				log.Error("dbhelper", "outputting data (%v) for config %v and assetId %v: %v", output.Data, asset.Config.Id, asset.AssetID, err)
+				changeAppStatus(statusError)
 				return
 			}
 		}
@@ -147,7 +166,7 @@ func Heartbeat() {
 	}
 
 	for _, root := range roots {
-		err := eliona.UpsertData(root.AssetID, map[string]any{}, time.Now(), api.SUBTYPE_INFO)
+		err := eliona.UpsertData(root.AssetID, map[string]any{"status": appStatus}, time.Now(), api.SUBTYPE_STATUS)
 		if err != nil {
 			log.Error("eliona", "upserting data as heartbeat: %v", err)
 			return
@@ -166,4 +185,5 @@ func ListenApi() {
 					apiserver.NewCustomizationAPIController(apiservices.NewCustomizationAPIService()),
 				))))
 	log.Fatal("main", "API server: %v", err)
+	changeAppStatus(statusFatal)
 }
