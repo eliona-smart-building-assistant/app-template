@@ -1,0 +1,13 @@
+{
+	"attributes": [],
+	"custom": false,
+	"icon": null,
+	"name": "app_name_root",
+	"translation": {
+		"de": "App Name Root",
+		"en": "App Name Root"
+	},
+	"allowedInactivity": "00:05:00",
+	"urldoc": "https://doc.eliona.io/collection/eliona-english/eliona-apps/apps/app-name",
+	"vendor": "App Name"
+}

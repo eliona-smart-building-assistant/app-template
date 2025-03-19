@@ -29,6 +29,7 @@ type Asset struct {
 	ProjectID       string     `boil:"project_id" json:"project_id" toml:"project_id" yaml:"project_id"`
 	GlobalAssetID   string     `boil:"global_asset_id" json:"global_asset_id" toml:"global_asset_id" yaml:"global_asset_id"`
 	ProviderID      string     `boil:"provider_id" json:"provider_id" toml:"provider_id" yaml:"provider_id"`
+	IsRoot          bool       `boil:"is_root" json:"is_root" toml:"is_root" yaml:"is_root"`
 	AssetID         null.Int32 `boil:"asset_id" json:"asset_id,omitempty" toml:"asset_id" yaml:"asset_id,omitempty"`
 
 	R *assetR `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -41,6 +42,7 @@ var AssetColumns = struct {
 	ProjectID       string
 	GlobalAssetID   string
 	ProviderID      string
+	IsRoot          string
 	AssetID         string
 }{
 	ID:              "id",
@@ -48,6 +50,7 @@ var AssetColumns = struct {
 	ProjectID:       "project_id",
 	GlobalAssetID:   "global_asset_id",
 	ProviderID:      "provider_id",
+	IsRoot:          "is_root",
 	AssetID:         "asset_id",
 }
 
@@ -57,6 +60,7 @@ var AssetTableColumns = struct {
 	ProjectID       string
 	GlobalAssetID   string
 	ProviderID      string
+	IsRoot          string
 	AssetID         string
 }{
 	ID:              "asset.id",
@@ -64,6 +68,7 @@ var AssetTableColumns = struct {
 	ProjectID:       "asset.project_id",
 	GlobalAssetID:   "asset.global_asset_id",
 	ProviderID:      "asset.provider_id",
+	IsRoot:          "asset.is_root",
 	AssetID:         "asset.asset_id",
 }
 
@@ -123,6 +128,15 @@ func (w whereHelperstring) NIN(slice []string) qm.QueryMod {
 	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
 }
 
+type whereHelperbool struct{ field string }
+
+func (w whereHelperbool) EQ(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
+func (w whereHelperbool) NEQ(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
+func (w whereHelperbool) LT(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
+func (w whereHelperbool) LTE(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
+func (w whereHelperbool) GT(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
+func (w whereHelperbool) GTE(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
+
 type whereHelpernull_Int32 struct{ field string }
 
 func (w whereHelpernull_Int32) EQ(x null.Int32) qm.QueryMod {
@@ -167,6 +181,7 @@ var AssetWhere = struct {
 	ProjectID       whereHelperstring
 	GlobalAssetID   whereHelperstring
 	ProviderID      whereHelperstring
+	IsRoot          whereHelperbool
 	AssetID         whereHelpernull_Int32
 }{
 	ID:              whereHelperint64{field: "\"app_schema_name\".\"asset\".\"id\""},
@@ -174,6 +189,7 @@ var AssetWhere = struct {
 	ProjectID:       whereHelperstring{field: "\"app_schema_name\".\"asset\".\"project_id\""},
 	GlobalAssetID:   whereHelperstring{field: "\"app_schema_name\".\"asset\".\"global_asset_id\""},
 	ProviderID:      whereHelperstring{field: "\"app_schema_name\".\"asset\".\"provider_id\""},
+	IsRoot:          whereHelperbool{field: "\"app_schema_name\".\"asset\".\"is_root\""},
 	AssetID:         whereHelpernull_Int32{field: "\"app_schema_name\".\"asset\".\"asset_id\""},
 }
 
@@ -205,9 +221,9 @@ func (r *assetR) GetConfiguration() *Configuration {
 type assetL struct{}
 
 var (
-	assetAllColumns            = []string{"id", "configuration_id", "project_id", "global_asset_id", "provider_id", "asset_id"}
+	assetAllColumns            = []string{"id", "configuration_id", "project_id", "global_asset_id", "provider_id", "is_root", "asset_id"}
 	assetColumnsWithoutDefault = []string{"project_id", "global_asset_id", "provider_id"}
-	assetColumnsWithDefault    = []string{"id", "configuration_id", "asset_id"}
+	assetColumnsWithDefault    = []string{"id", "configuration_id", "is_root", "asset_id"}
 	assetPrimaryKeyColumns     = []string{"id"}
 	assetGeneratedColumns      = []string{}
 )

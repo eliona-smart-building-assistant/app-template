@@ -216,3 +216,29 @@ func GetAssetById(assetId int32) (appmodel.Asset, error) {
 	}
 	return toAppAsset(*asset, config), nil
 }
+
+func GetRootAssets() ([]appmodel.Asset, error) {
+	assets, err := dbgen.Assets(
+		dbgen.AssetWhere.IsRoot.EQ(true),
+	).AllG(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("fetching root assets: %v", err)
+	}
+
+	appAssets := make([]appmodel.Asset, 0, len(assets))
+	for _, asset := range assets {
+		c, err := asset.Configuration().OneG(context.Background())
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNotFound
+		}
+		if err != nil {
+			return nil, fmt.Errorf("fetching configuration: %v", err)
+		}
+		config, err := toAppConfig(c)
+		if err != nil {
+			return nil, fmt.Errorf("translating configuration: %v", err)
+		}
+		appAssets = append(appAssets, toAppAsset(*asset, config))
+	}
+	return appAssets, nil
+}

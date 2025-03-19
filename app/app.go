@@ -26,6 +26,7 @@ import (
 	"sync"
 	"time"
 
+	api "github.com/eliona-smart-building-assistant/go-eliona-api-client/v2"
 	"github.com/eliona-smart-building-assistant/go-eliona/app"
 	"github.com/eliona-smart-building-assistant/go-eliona/asset"
 	"github.com/eliona-smart-building-assistant/go-eliona/dashboard"
@@ -136,6 +137,22 @@ func ListenForOutputChanges() {
 func outputData(asset appmodel.Asset, data map[string]interface{}) error {
 	// Do the output magic here.
 	return nil
+}
+
+func Heartbeat() {
+	roots, err := dbhelper.GetRootAssets()
+	if err != nil {
+		log.Error("dbhelper", "getting root assets: %v", err)
+		return
+	}
+
+	for _, root := range roots {
+		err := eliona.UpsertData(root.AssetID, map[string]any{}, time.Now(), api.SUBTYPE_INFO)
+		if err != nil {
+			log.Error("eliona", "upserting data as heartbeat: %v", err)
+			return
+		}
+	}
 }
 
 // ListenApi starts the API server and listen for requests

@@ -53,6 +53,7 @@ func main() {
 		common.Loop(app.CollectData, time.Second),
 		app.ListenApi,
 		app.ListenForOutputChanges,
+		common.Loop(app.Heartbeat, 2*time.Minute),
 	)
 
 	log.Info("main", "Terminate the app.")

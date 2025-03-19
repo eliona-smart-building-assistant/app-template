@@ -18,7 +18,9 @@ package eliona
 import (
 	appmodel "app-name/app/model"
 	"fmt"
+	"time"
 
+	api "github.com/eliona-smart-building-assistant/go-eliona-api-client/v2"
 	"github.com/eliona-smart-building-assistant/go-eliona/asset"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
 )
@@ -48,6 +50,23 @@ func UpsertAssetData(config appmodel.Configuration, assets []ExampleDevice) erro
 				return fmt.Errorf("upserting data: %v", err)
 			}
 		}
+	}
+	return nil
+}
+
+func UpsertData(assetID int32, assetData map[string]any, timestamp time.Time, subtype api.DataSubtype) error {
+	cr := ClientReference
+
+	data := api.Data{
+		AssetId:         assetID,
+		Subtype:         subtype,
+		Timestamp:       *api.NewNullableTime(&timestamp),
+		Data:            assetData,
+		ClientReference: *api.NewNullableString(&cr),
+		// AssetTypeName: api.NullableString{}, No need to fill, it's only for selection
+	}
+	if err := asset.UpsertDataIfAssetExists(data); err != nil {
+		return fmt.Errorf("upserting data: %v", err)
 	}
 	return nil
 }

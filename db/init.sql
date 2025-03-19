@@ -36,6 +36,7 @@ create table if not exists app_schema_name.asset
 	project_id       text      not null,
 	global_asset_id  text      not null,
 	provider_id      text      not null,
+	is_root          boolean   not null default false,
 	asset_id         integer
 );
 
