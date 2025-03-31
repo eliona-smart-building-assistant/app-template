@@ -29,7 +29,7 @@
 	],
 	"custom": false,
 	"icon": null,
-	"name": "app_name_root",
+	"name": "app_schema_name_root",
 	"translation": {
 		"de": "App Name Root",
 		"en": "App Name Root"

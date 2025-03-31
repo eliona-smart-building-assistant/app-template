@@ -57,7 +57,7 @@ func (d *ExampleDevice) GetDescription() string {
 }
 
 func (d *ExampleDevice) GetAssetType() string {
-	return "app_name_device"
+	return "app_schema_name_device"
 }
 
 func (d *ExampleDevice) GetGAI() string {
@@ -91,7 +91,7 @@ type Root struct {
 }
 
 func (r *Root) GetName() string {
-	return "app_name"
+	return "app_schema_name"
 }
 
 func (r *Root) GetDescription() string {
@@ -99,7 +99,7 @@ func (r *Root) GetDescription() string {
 }
 
 func (r *Root) GetAssetType() string {
-	return "app_name_root"
+	return "app_schema_name_root"
 }
 
 func (r *Root) GetGAI() string {
