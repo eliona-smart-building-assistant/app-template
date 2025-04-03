@@ -27,14 +27,14 @@ import (
 
 var devicesCount map[int64]int
 
-func CreateAssets(config appmodel.Configuration, root asset.Root) error {
+func CreateAssets(config appmodel.Configuration, assets []asset.AssetWithParentReferences) error {
 	// TODO: remove this workaround once the assetsCreated is returned correctly againTODO
 	if devicesCount == nil {
 		devicesCount = make(map[int64]int)
 	}
 	for _, projectId := range config.ProjectIDs {
 		// TODO: this does not return assets created anymore, but total number of assets!
-		assetsCreated, err := asset.CreateAssets(root, projectId)
+		assetsCreated, err := asset.CreateAssetsBulk(assets, projectId)
 		if err != nil {
 			return err
 		}

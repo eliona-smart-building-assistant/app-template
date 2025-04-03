@@ -17,7 +17,8 @@ package broker
 
 import (
 	appmodel "app-name/app/model"
-	"app-name/eliona"
+
+	"github.com/eliona-smart-building-assistant/go-eliona/asset"
 )
 
 func TestAuthentication(config appmodel.Configuration) error {
@@ -25,6 +26,6 @@ func TestAuthentication(config appmodel.Configuration) error {
 	return nil
 }
 
-func GetDevices(config appmodel.Configuration) (eliona.Root, error) {
-	return eliona.Root{}, nil
+func GetDevices(config appmodel.Configuration) ([]asset.AssetWithParentReferences, error) {
+	return []asset.AssetWithParentReferences{}, nil
 }

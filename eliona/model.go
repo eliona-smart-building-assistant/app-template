@@ -21,7 +21,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/eliona-smart-building-assistant/go-eliona/asset"
 	"github.com/eliona-smart-building-assistant/go-eliona/utils"
 	"github.com/eliona-smart-building-assistant/go-utils/common"
 )
@@ -31,6 +30,9 @@ import (
 type ExampleDevice struct {
 	ID   string `eliona:"id" subtype:"info"`
 	Name string `eliona:"name,filterable" subtype:"info"`
+
+	LocationalParentGAI string
+	FunctionalParentGAI string
 
 	Config *appmodel.Configuration
 }
@@ -75,17 +77,20 @@ func (d *ExampleDevice) SetAssetID(assetID int32, projectID string) error {
 	return nil
 }
 
-func (d *ExampleDevice) GetLocationalChildren() []asset.LocationalNode {
-	return []asset.LocationalNode{}
+func (d *ExampleDevice) GetLocationalParentGAI() string {
+	return d.LocationalParentGAI
 }
 
-func (d *ExampleDevice) GetFunctionalChildren() []asset.FunctionalNode {
-	return []asset.FunctionalNode{}
+func (d *ExampleDevice) GetFunctionalParentGAI() string {
+	return d.FunctionalParentGAI
 }
 
 type Root struct {
 	locationsMap map[string]ExampleDevice
 	devicesSlice []ExampleDevice
+
+	LocationalParentGAI string
+	FunctionalParentGAI string
 
 	Config *appmodel.Configuration
 }
@@ -117,21 +122,12 @@ func (r *Root) SetAssetID(assetID int32, projectID string) error {
 	return nil
 }
 
-func (r *Root) GetLocationalChildren() []asset.LocationalNode {
-	locationalChildren := make([]asset.LocationalNode, 0, len(r.locationsMap))
-	for _, room := range r.locationsMap {
-		roomCopy := room // Create a copy of room
-		locationalChildren = append(locationalChildren, &roomCopy)
-	}
-	return locationalChildren
+func (r *Root) GetLocationalParentGAI() string {
+	return r.LocationalParentGAI
 }
 
-func (r *Root) GetFunctionalChildren() []asset.FunctionalNode {
-	functionalChildren := make([]asset.FunctionalNode, 0, len(r.devicesSlice))
-	for i := range r.devicesSlice {
-		functionalChildren[i] = &r.devicesSlice[i]
-	}
-	return functionalChildren
+func (r *Root) GetFunctionalParentGAI() string {
+	return r.FunctionalParentGAI
 }
 
 //
