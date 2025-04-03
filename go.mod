@@ -5,7 +5,7 @@ go 1.24
 require (
 	github.com/eliona-smart-building-assistant/app-integration-tests v1.1.6
 	github.com/eliona-smart-building-assistant/go-eliona v1.10.5
-	github.com/eliona-smart-building-assistant/go-utils v1.1.2
+	github.com/eliona-smart-building-assistant/go-utils v1.1.4
 	github.com/gorilla/mux v1.8.1
 	github.com/volatiletech/sqlboiler/v4 v4.18.0
 	gopkg.in/yaml.v3 v3.0.1
