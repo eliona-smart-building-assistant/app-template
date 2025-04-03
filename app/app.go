@@ -22,6 +22,7 @@ import (
 	dbhelper "app-name/db/helper"
 	"app-name/eliona"
 	"context"
+	"errors"
 	"net/http"
 	"sync"
 	"time"
@@ -137,7 +138,10 @@ func ListenForOutputChanges() {
 				continue
 			}
 			asset, err := dbhelper.GetAssetById(output.AssetId)
-			if err != nil {
+			if errors.Is(err, dbhelper.ErrNotFound) {
+				log.Debug("app", "received data update for other apps asset %v", output.AssetId)
+				continue
+			} else if err != nil {
 				log.Error("dbhelper", "getting asset by assetID %v: %v", output.AssetId, err)
 				changeAppStatus(statusError)
 				return
