@@ -69,7 +69,7 @@ func (d *ExampleDevice) GetAssetID(projectID string) (*int32, error) {
 }
 
 func (d *ExampleDevice) SetAssetID(assetID int32, projectID string) error {
-	if err := conf.InsertAsset(context.Background(), *d.Config, projectID, d.GetGAI(), assetID, d.ID); err != nil {
+	if err := conf.InsertAsset(context.Background(), *d.Config, projectID, d.GetGAI(), assetID, d.ID, false); err != nil {
 		return fmt.Errorf("inserting asset to config db: %v", err)
 	}
 	return nil
@@ -111,7 +111,7 @@ func (r *Root) GetAssetID(projectID string) (*int32, error) {
 }
 
 func (r *Root) SetAssetID(assetID int32, projectID string) error {
-	if err := conf.InsertAsset(context.Background(), *r.Config, projectID, r.GetGAI(), assetID, ""); err != nil {
+	if err := conf.InsertAsset(context.Background(), *r.Config, projectID, r.GetGAI(), assetID, "", true); err != nil {
 		return fmt.Errorf("inserting asset to config db: %v", err)
 	}
 	return nil

@@ -162,14 +162,16 @@ func SetAllConfigsInactive(ctx context.Context) (int64, error) {
 	})
 }
 
-func InsertAsset(ctx context.Context, config appmodel.Configuration, projId string, globalAssetID string, assetId int32, providerId string) error {
-	var dbAsset dbgen.Asset
-	dbAsset.ConfigurationID = config.Id
-	dbAsset.ProjectID = projId
-	dbAsset.GlobalAssetID = globalAssetID
-	dbAsset.AssetID = null.Int32From(assetId)
-	dbAsset.ProviderID = providerId
-	return dbAsset.InsertG(ctx, boil.Infer())
+func InsertAsset(ctx context.Context, config appmodel.Configuration, projId string, globalAssetID string, assetId int32, providerId string, isRoot bool) error {
+	dbAsset := dbgen.Asset{
+		ConfigurationID: config.Id,
+		ProjectID:       projId,
+		GlobalAssetID:   globalAssetID,
+		AssetID:         null.Int32From(assetId),
+		ProviderID:      providerId,
+		IsRoot:          isRoot,
+	}
+	return dbAsset.UpsertG(ctx, true, []string{dbgen.AssetColumns.ProviderID}, boil.Blacklist("id"), boil.Infer())
 }
 
 func GetAssetId(ctx context.Context, config appmodel.Configuration, projId string, globalAssetID string) (*int32, error) {
