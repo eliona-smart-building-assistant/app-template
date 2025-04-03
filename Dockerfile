@@ -1,5 +1,5 @@
 #  This file is part of the Eliona project.
-#  Copyright © 2024 IoTEC AG. All Rights Reserved.
+#  Copyright © 2025 IoTEC AG. All Rights Reserved.
 #  ______ _ _
 # |  ____| (_)
 # | |__  | |_  ___  _ __   __ _
