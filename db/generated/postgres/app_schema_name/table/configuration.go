@@ -29,6 +29,7 @@ type configurationTable struct {
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
+	DefaultColumns postgres.ColumnList
 }
 
 type ConfigurationTable struct {
@@ -77,6 +78,7 @@ func newConfigurationTableImpl(schemaName, tableName, alias string) configuratio
 		UserIDColumn            = postgres.StringColumn("user_id")
 		allColumns              = postgres.ColumnList{IDColumn, APIAccessChangeMeColumn, RefreshIntervalColumn, RequestTimeoutColumn, AssetFilterColumn, ActiveColumn, EnableColumn, ProjectIdsColumn, UserIDColumn}
 		mutableColumns          = postgres.ColumnList{APIAccessChangeMeColumn, RefreshIntervalColumn, RequestTimeoutColumn, AssetFilterColumn, ActiveColumn, EnableColumn, ProjectIdsColumn, UserIDColumn}
+		defaultColumns          = postgres.ColumnList{IDColumn, RefreshIntervalColumn, RequestTimeoutColumn, ActiveColumn, EnableColumn}
 	)
 
 	return configurationTable{
@@ -95,5 +97,6 @@ func newConfigurationTableImpl(schemaName, tableName, alias string) configuratio
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,
+		DefaultColumns: defaultColumns,
 	}
 }

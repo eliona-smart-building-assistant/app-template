@@ -22,10 +22,12 @@ type assetTable struct {
 	ProjectID       postgres.ColumnString
 	GlobalAssetID   postgres.ColumnString
 	ProviderID      postgres.ColumnString
+	IsRoot          postgres.ColumnBool
 	AssetID         postgres.ColumnInteger
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
+	DefaultColumns postgres.ColumnList
 }
 
 type AssetTable struct {
@@ -68,9 +70,11 @@ func newAssetTableImpl(schemaName, tableName, alias string) assetTable {
 		ProjectIDColumn       = postgres.StringColumn("project_id")
 		GlobalAssetIDColumn   = postgres.StringColumn("global_asset_id")
 		ProviderIDColumn      = postgres.StringColumn("provider_id")
+		IsRootColumn          = postgres.BoolColumn("is_root")
 		AssetIDColumn         = postgres.IntegerColumn("asset_id")
-		allColumns            = postgres.ColumnList{IDColumn, ConfigurationIDColumn, ProjectIDColumn, GlobalAssetIDColumn, ProviderIDColumn, AssetIDColumn}
-		mutableColumns        = postgres.ColumnList{ConfigurationIDColumn, ProjectIDColumn, GlobalAssetIDColumn, ProviderIDColumn, AssetIDColumn}
+		allColumns            = postgres.ColumnList{IDColumn, ConfigurationIDColumn, ProjectIDColumn, GlobalAssetIDColumn, ProviderIDColumn, IsRootColumn, AssetIDColumn}
+		mutableColumns        = postgres.ColumnList{ConfigurationIDColumn, ProjectIDColumn, GlobalAssetIDColumn, ProviderIDColumn, IsRootColumn, AssetIDColumn}
+		defaultColumns        = postgres.ColumnList{IDColumn, ConfigurationIDColumn, IsRootColumn}
 	)
 
 	return assetTable{
@@ -82,9 +86,11 @@ func newAssetTableImpl(schemaName, tableName, alias string) assetTable {
 		ProjectID:       ProjectIDColumn,
 		GlobalAssetID:   GlobalAssetIDColumn,
 		ProviderID:      ProviderIDColumn,
+		IsRoot:          IsRootColumn,
 		AssetID:         AssetIDColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,
+		DefaultColumns: defaultColumns,
 	}
 }

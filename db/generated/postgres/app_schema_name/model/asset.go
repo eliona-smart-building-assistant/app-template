@@ -13,5 +13,6 @@ type Asset struct {
 	ProjectID       string
 	GlobalAssetID   string
 	ProviderID      string
+	IsRoot          bool
 	AssetID         *int32
 }
