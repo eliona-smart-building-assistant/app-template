@@ -1,5 +1,3 @@
-go install github.com/go-jet/jet/v2/cmd/jet@latest
-
 # Read the content of init.sql
 INIT_SQL_CONTENT=$(<"${PWD}/db/init.sql")
 
@@ -24,7 +22,7 @@ docker run -d \
 # Wait for PostgreSQL to initialize
 sleep 5
 
-jet -dsn=postgres://postgres:secret@localhost:6001/postgres?sslmode=disable -schema=app_schema_name -path=./db/generated
+go run ./tools/db-generator/main.go -dsn="postgres://postgres:secret@localhost:6001/postgres?sslmode=disable" -schema="app_schema_name" -path="../../db/generated"
 
 docker stop "app_jet_code_generation" > /dev/null
 
