@@ -71,3 +71,7 @@ In case it's not desired to import all assets from App Name to Eliona, it's poss
 The app offers a predefined dashboard that clearly displays the most important information. You can create such a dashboard under `Dashboards > Copy Dashboard > From App > App Name`.
 
 ### <mark>TODO: Other features</mark>
+
+## App status monitoring
+
+Along with asset creation, an asset called "App Name root" is also created. It's purpose is to inform users of the app status -- It signalizes whether the app is running (Asset status -> Active/Inactive) and it's status - the Status attribute. If the app status is not "OK", it signifies that the app might not be functioning properly. If the error state persists, let us know by submitting a bug report.
