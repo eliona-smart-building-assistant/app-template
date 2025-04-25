@@ -213,6 +213,8 @@ components:
         type: integer
         format: int64
         example: 4711
+        x-schema-bind:
+          $ref: "#/components/schemas/Configuration/properties/id"
 
   schemas:
     Configuration:
@@ -264,6 +266,7 @@ components:
           nullable: true
           items:
             type: string
+            x-eliona-bind: public.eliona_project.proj_id
           example:
             - "42"
             - "99"
