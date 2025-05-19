@@ -22,7 +22,7 @@ docker run -d \
 # Wait for PostgreSQL to initialize
 sleep 5
 
-go run ./tools/db-generator/main.go -dsn="postgres://postgres:secret@localhost:6001/postgres?sslmode=disable" -schema="app_schema_name" -path="../../db/generated"
+go run ./tools/db-generator/main.go -dsn="postgres://postgres:secret@localhost:6001/postgres?sslmode=disable" -schema="app_schema_name" -path="./db/generated"
 
 docker stop "app_jet_code_generation" > /dev/null
 
