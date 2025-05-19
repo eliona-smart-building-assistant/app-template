@@ -7,6 +7,10 @@
 
 package model
 
+import (
+	"github.com/lib/pq"
+)
+
 type Configuration struct {
 	ID                int64 `sql:"primary_key"`
 	APIAccessChangeMe string
@@ -15,6 +19,6 @@ type Configuration struct {
 	AssetFilter       string
 	Active            bool
 	Enable            bool
-	ProjectIds        string
+	ProjectIds        pq.StringArray
 	UserID            string
 }
