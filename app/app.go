@@ -85,13 +85,13 @@ func CollectData() {
 	for _, config := range configs {
 		if !config.Enable {
 			if config.Active {
-				dbhelper.SetConfigActiveState(context.Background(), config, false)
+				dbhelper.SetConfigActiveState(context.Background(), config.Id, false)
 			}
 			continue
 		}
 
 		if !config.Active {
-			dbhelper.SetConfigActiveState(context.Background(), config, true)
+			dbhelper.SetConfigActiveState(context.Background(), config.Id, true)
 			log.Info("dbhelper", "Collecting initialized with Configuration %d:\n"+
 				"Enable: %t\n"+
 				"Refresh Interval: %d\n"+

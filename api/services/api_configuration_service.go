@@ -54,7 +54,7 @@ func (s *ConfigurationAPIService) PostConfiguration(ctx context.Context, config 
 	if err := broker.TestAuthentication(appConfig); err != nil {
 		return apiserver.ImplResponse{Code: http.StatusBadRequest}, fmt.Errorf("testing authentication: %v", err)
 	}
-	insertedConfig, err := dbhelper.InsertConfig(ctx, appConfig)
+	insertedConfig, err := dbhelper.UpsertConfig(ctx, appConfig)
 	if err != nil {
 		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
 	}
