@@ -211,9 +211,7 @@ func toAppConfig(dbCfg model.Configuration) (appmodel.Configuration, error) {
 		Active:            dbCfg.Active,
 		Enable:            dbCfg.Enable,
 		ProjectIDs:        dbCfg.ProjectIds,
-		// https://github.com/go-jet/jet/issues/351
-		// https://github.com/go-jet/jet/issues/53
-		UserId: dbCfg.UserID,
+		UserId:            dbCfg.UserID,
 	}, nil
 }
 
