@@ -1,43 +1,46 @@
-go install github.com/volatiletech/sqlboiler/v4@latest
-go install github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-psql@latest
+@echo off
+setlocal enabledelayedexpansion
 
-go get github.com/volatiletech/sqlboiler/v4
-go get github.com/volatiletech/null/v8
+go install github.com/eliona-smart-building-assistant/dev-utilities/cmd/db-generator@latest
 
-rem Read the content of init.sql
+:: Read the content of init.sql
 set "INIT_SQL_CONTENT="
-for /f "delims=" %%i in ('type "%cd%\db\init.sql"') do set "INIT_SQL_CONTENT=!INIT_SQL_CONTENT!%%i\n"
-
-rem Create init_wrapper.sql to run the script in a transaction. This is needed for
-rem COMMIT AND CHAIN to work in the script.
-(
-    echo BEGIN;
-    echo %INIT_SQL_CONTENT%
-    echo COMMIT;
-) > %cd%\db\init_wrapper.sql
-
-docker run -d ^
-    --name "app_sql_boiler_code_generation" ^
-    -e "POSTGRES_PASSWORD=secret" ^
-    -p "6001:5432" ^
-    -v "%cd%"\db\init_wrapper.sql:/docker-entrypoint-initdb.d/init_wrapper.sql ^
-    debezium/postgres:12  > NUL
-
-rem Wait for PostgreSQL to initialize
-timeout /t 5
-
-sqlboiler psql ^
-    -c db/sqlboiler.toml ^
-    --wipe --no-tests
-
-docker stop "app_sql_boiler_code_generation" > NUL
-
-docker logs "app_sql_boiler_code_generation" 2>&1 | findstr "ERROR" || (
-    echo All good.
+for /f "delims=" %%i in ('type "%CD%\db\init.sql"') do (
+    set "line=%%i"
+    set "INIT_SQL_CONTENT=!INIT_SQL_CONTENT!!line!!\n!"
 )
 
-docker rm "app_sql_boiler_code_generation" > NUL
+:: Create init_wrapper.sql to run the script in a transaction
+(
+    echo BEGIN;
+    echo !INIT_SQL_CONTENT!
+    echo COMMIT;
+) > .\db\init_wrapper.sql
 
+:: Run PostgreSQL container
+docker run -d ^
+    --name "app_jet_code_generation" ^
+    --platform "linux/amd64" ^
+    -e "POSTGRES_PASSWORD=secret" ^
+    -p "6001:5432" ^
+    -v "%CD%\db\init_wrapper.sql:/docker-entrypoint-initdb.d/init_wrapper.sql" ^
+    debezium/postgres:12
+
+:: Wait for PostgreSQL to initialize
+timeout /t 5 >nul
+
+:: Run Go code generator
+db-generator -dsn="postgres://postgres:secret@localhost:6001/postgres?sslmode=disable" -schema="app_schema_name" -path=".\db\generated"
+
+:: Stop and clean up the container
+docker stop "app_jet_code_generation" >nul 2>&1
+docker logs "app_jet_code_generation" 2>&1 | find "ERROR" || (
+    echo All good.
+)
+docker rm "app_jet_code_generation" >nul 2>&1
+
+:: Clean up
 del .\db\init_wrapper.sql
 
+:: Run go mod tidy
 go mod tidy

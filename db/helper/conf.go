@@ -15,6 +15,43 @@
 
 package dbhelper
 
+import (
+	"database/sql"
+	"log"
+)
+
+// DBHelper is a singleton struct managing the database connection and queries.
+type DBHelper struct {
+	db *sql.DB
+}
+
+var (
+	instance *DBHelper
+)
+
+// InitDB initializes the database connection ONCE.
+func InitDB(db *sql.DB) {
+	instance = &DBHelper{
+		db: db,
+	}
+}
+
+// GetDB returns the singleton database instance.
+func GetDB() *DBHelper {
+	if instance == nil {
+		log.Fatal("conf", "Database not initialized. Call InitDB() first.")
+	}
+	return instance
+}
+
+// CloseDB gracefully shuts down the database connection.
+func CloseDB() error {
+	if instance != nil && instance.db != nil {
+		return instance.db.Close()
+	}
+	return nil
+}
+
 //
 // Todo: Define anything for configuration like structures and methods to read and process configuration
 //

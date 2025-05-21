@@ -7,13 +7,8 @@ require (
 	github.com/eliona-smart-building-assistant/go-eliona v1.10.9
 	github.com/eliona-smart-building-assistant/go-utils v1.1.6
 	github.com/gorilla/mux v1.8.1
-	github.com/volatiletech/sqlboiler/v4 v4.19.1
 	gopkg.in/yaml.v3 v3.0.1
 )
-
-// Bugfix see: https://github.com/volatiletech/sqlboiler/blob/91c4f335dd886d95b03857aceaf17507c46f9ec5/README.md
-// decimal library showing errors like: pq: encode: unknown type types.NullDecimal is a result of a too-new and broken version of the github.com/ericlargergren/decimal package, use the following version in your go.mod: github.com/ericlagergren/decimal v0.0.0-20181231230500-73749d4874d5
-replace github.com/ericlagergren/decimal => github.com/ericlagergren/decimal v0.0.0-20181231230500-73749d4874d5
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -34,6 +29,7 @@ require (
 	github.com/spf13/cast v1.8.0 // indirect
 	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
+	github.com/volatiletech/sqlboiler/v4 v4.19.1 // indirect
 	github.com/volatiletech/strmangle v0.0.8 // indirect
 	golang.org/x/crypto v0.38.0 // indirect
 	golang.org/x/image v0.19.0 // indirect
