@@ -1,24 +1,22 @@
 {
   "name": "app-name",
-  "elionaMinVersion": "v11.0.0",
+  "elionaMinVersion": "v14.0.0",
   "displayName": {
     "en": "App Name",
     "de": "App Name"
   },
   "description": {
-    "en": "The App Name app is used to access App Name.",
-    "de": "Die App Name App ermöglicht den Zugriff auf App Name."
+    "en": "Reads the devices of an App Name account and shows them as assets.",
+    "de": "Liest die Geräte eines App Name Kontos und zeigt sie als Assets an."
   },
-  "dashboardTemplateNames": [
-    "App Name"
-  ],
   "apiUrl": "v1",
   "apiSpecificationPath": "/version/openapi.json",
-  "documentationUrl": "https://doc.eliona.io/collection/eliona-english/eliona-apps/apps/app-name",
+  "documentationUrl": "https://github.com/eliona-smart-building-assistant/app-template",
   "useEnvironment": [
-    "CONNECTION_STRING",
-    "INIT_CONNECTION_STRING",
     "API_ENDPOINT",
-    "API_TOKEN"
+    "API_TOKEN",
+    "API_SERVER_PORT",
+    "DATA_DIR",
+    "LOG_LEVEL"
   ]
 }

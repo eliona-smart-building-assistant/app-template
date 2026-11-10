@@ -1,5 +1,9 @@
 *.iml
-.idea/**
-api/generated/.openapi-generator/**
-api/generated/api/**
-api/generated/*_service.go
+.idea/
+.vscode/
+/data/
+*.db
+*.db-shm
+*.db-wal
+/app-name
+/fake-vendor

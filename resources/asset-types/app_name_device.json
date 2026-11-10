@@ -1,0 +1,24 @@
+{
+	"name": "app_name_device",
+	"custom": true,
+	"vendor": "App Name",
+	"translation": {
+		"de": "App Name Gerät",
+		"en": "App Name device"
+	},
+	"urldoc": "https://github.com/eliona-smart-building-assistant/app-template",
+	"icon": "sensor",
+	"attributes": [
+		{
+			"name": "temperature",
+			"enable": true,
+			"subtype": "input",
+			"translation": {
+				"de": "Temperatur",
+				"en": "Temperature"
+			},
+			"type": "temperature",
+			"isDigital": false
+		}
+	]
+}

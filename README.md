@@ -1,88 +1,88 @@
-<mark>
-Replace the following strings globally with the real app name:
-</mark>
+# App template for BuildingPro Suites
 
-- `app-name` with app's repo name. Use `-` if the app name contains spaces or other separators (such as dots). All letters are lower-cased. For names containing dots, adapt the documentation links.
-- `app_schema_name` and `app\\_schema\\_name` with app's db schema name. Use `_` if the app name contains spaces. All letters are lower-cased.
-- `App Name` with app's real name. Letters can be mixed-cased, depends on using e.g. brand names.
+Start here to build your own app for BuildingPro Suites. The app talks to the platform only through the public
+[API v2](https://github.com/eliona-smart-building-assistant/eliona-api) with its own API key. It needs no access
+to the platform database and keeps its own data in an embedded SQLite file.
 
-# Eliona App for App Name
+> Looking for the old template with its own database schema (`init.sql`, `INIT_CONNECTION_STRING`)?
+> It is kept as tag [`legacy-v14`](https://github.com/eliona-smart-building-assistant/app-template/tree/legacy-v14).
+> New apps should not use it.
 
-The App Name app is used to access App Name.
+## What the template does
 
-## Configuration
-
-The app needs environment variables and database tables for configuration. To edit the database tables the app provides an own API access.
-
-
-### Registration in Eliona ###
-
-To start and initialize an app in an Eliona environment, the app has to be registered in Eliona. For this, entries in database tables `public.eliona_app` and `public.eliona_store` are necessary.
-
-This initialization can be handled by the `reset.sql` script.
-
-
-### Environment variables
-
-<mark>Todo: Describe further environment variables tables the app needs for configuration</mark>
-
-- `CONNECTION_STRING`: configures the [Eliona database](https://github.com/eliona-smart-building-assistant/go-eliona/tree/main/db). Otherwise, the app can't be initialized and started (e.g. `postgres://user:pass@localhost:5432/iot`).
-
-- `INIT_CONNECTION_STRING`: configures the [Eliona database](https://github.com/eliona-smart-building-assistant/go-eliona/tree/main/db) for app initialization like creating schema and tables (e.g. `postgres://user:pass@localhost:5432/iot`). Default is content of `CONNECTION_STRING`.
-
-- `API_ENDPOINT`:  configures the endpoint to access the [Eliona API v2](https://github.com/eliona-smart-building-assistant/eliona-api). Otherwise, the app can't be initialized and started. (e.g. `http://api-v2:3000/v2`)
-
-- `API_TOKEN`: defines the secret to authenticate the app and access the Eliona API.
-
-- `API_SERVER_PORT`(optional): define the port the API server listens. The default value is Port `3000`. <mark>Todo: Decide if the app needs its own API. If so, an API server have to implemented and the port have to be configurable.</mark>
-
-- `LOG_LEVEL`(optional): defines the minimum level that should be [logged](https://github.com/eliona-smart-building-assistant/go-utils/blob/main/log/README.md). The default level is `info`.
-
-### Database tables ###
-
-<mark>Todo: Describe the database objects the app needs for configuration</mark>
-
-<mark>Todo: Decide if the app uses its own data and which data should be accessible from outside the app. This is always the case with configuration data. If so, the app needs its own API server to provide access to this data. To define the API use an openapi.yaml file and generators to build the server stub.</mark>
-
-The app requires configuration data that remains in the database. To do this, the app creates its own database schema `app_schema_name` during initialization. To modify and handle the configuration data the app provides an API access. Have a look at the [API specification](https://eliona-smart-building-assistant.github.io/open-api-docs/?https://raw.githubusercontent.com/eliona-smart-building-assistant/app-name-app/develop/openapi.yaml) how the configuration tables should be used.
-
-- `app_schema_name.example_table`: <mark>Todo: Describe the database table in short.</mark>
-
-**Generation**: to generate access method to database see Generation section below.
-
-
-## References
-
-### App API ###
-
-The app provides its own API to access configuration data and other functions. The full description of the API is defined in the `openapi.yaml` OpenAPI definition file.
-
-- [API Reference](https://eliona-smart-building-assistant.github.io/open-api-docs/?https://raw.githubusercontent.com/eliona-smart-building-assistant/app-name-app/develop/openapi.yaml) shows Details of the API
-
-**Generation**: to generate api server stub see Generation section below.
-
-
-### Eliona ###
-
-<mark>Todo: Describe all the data the app writes to eliona</mark>
-
-
-## Tools
-
-### Generate API server stub ###
-
-For the API server the [OpenAPI Generator](https://openapi-generator.tech/docs/generators/openapi-yaml) for go-server is used to generate a server stub. The easiest way to generate the server files is to use one of the predefined generation script which use the OpenAPI Generator Docker image.
+The example app polls a vendor API, creates one asset per vendor device and writes its temperature as data:
 
 ```
-.\generate-api-server.cmd # Windows
-./generate-api-server.sh # Linux
+vendor API  --GET /devices-->  app  --API v2 (asset types, assets, data)-->  BuildingPro Suites
+                                |
+                                +-- SQLite (/data/app.db): configurations, vendor ID -> asset ID
 ```
 
-### Generate Database access ###
+- **Configuration API** (`/v1/configs`): BuildingPro Suites renders the configuration form from the
+  `Configuration` schema in [openapi.yaml](openapi.yaml).
+- **Asset type** from [resources/asset-types](resources/asset-types), created on start.
+- **Worker** polls every enabled configuration and creates or updates assets and data.
+- **fake-vendor** (`cmd/fake-vendor`) stands in for the vendor API during development.
 
-For the database access [SQLBoiler](https://github.com/volatiletech/sqlboiler) is used. The easiest way to generate the database files is to use one of the predefined generation script which use the SQLBoiler implementation. Please note that the database connection in the `sqlboiler.toml` file have to be configured.
+## Quickstart
 
+Requirements: Go 1.27, Docker.
+
+1. Create your repository from this template (GitHub button "Use this template") and replace the placeholders,
+   see [Rename the app](docs/DEVELOPMENT.md#rename-the-app).
+
+2. Start the platform mock (API v2 on `localhost:3000`, API key `secret`) and create a project:
+
+   ```sh
+   git clone --branch v26.4.3 https://github.com/eliona-smart-building-assistant/eliona-mock
+   docker compose -f eliona-mock/docker-compose.yml up -d
+   curl -X PUT localhost:3000/v2/projects -H 'X-API-Key: secret' -H 'Content-Type: application/json' \
+     -d '{"title":"Mock project"}'
+   ```
+
+   The response contains the project ID used in step 4.
+
+3. Start the fake vendor and the app:
+
+   ```sh
+   go run ./cmd/fake-vendor &
+   mkdir -p data
+   API_ENDPOINT=http://localhost:3000/v2 API_TOKEN=secret API_SERVER_PORT=3001 DATA_DIR=./data \
+     go run ./cmd/app-name
+   ```
+
+4. Add a configuration:
+
+   ```sh
+   curl -X POST localhost:3001/v1/configs -H 'Content-Type: application/json' \
+     -d '{"url":"http://localhost:8080","refreshInterval":10,"projectIDs":["<project ID>"]}'
+   ```
+
+   Within one refresh interval the app creates three assets of type `app_name_device` in the project and
+   writes their temperature; check with `curl 'localhost:3000/v2/data?assetId=2' -H 'X-API-Key: secret'`.
+
+## Environment
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `API_ENDPOINT` | yes | | API v2 base URL, e.g. `https://<name>/api/v2` |
+| `API_TOKEN` | yes | | API key of the app; it belongs to one tenant |
+| `API_SERVER_PORT` | no | `3000` | Port of the app's own API |
+| `DATA_DIR` | no | `/data` | Directory of the SQLite file; mount a volume here |
+| `LOG_LEVEL` | no | `info` | `debug`, `info`, `warn` or `error` |
+
+## Run as container
+
+```sh
+docker build --build-arg GIT_COMMIT=$(git rev-parse HEAD) -t app-name .
+docker run -d -p 3001:3000 -v app-name-data:/data \
+  -e API_ENDPOINT=https://<name>/api/v2 -e API_TOKEN=<key> app-name
 ```
-.\generate-db.cmd # Windows
-./generate-db.sh # Linux
-```
+
+Run exactly one instance per API key; SQLite does not support several writers.
+
+## Documentation
+
+- [Developer guide](docs/DEVELOPMENT.md): structure, rename, configuration schema, data, tests, release
+- [API v2 reference](https://api.eliona.io/?https://raw.githubusercontent.com/eliona-smart-building-assistant/eliona-api/main/openapi.yaml)
+- [Platform mock](https://github.com/eliona-smart-building-assistant/eliona-mock)
