@@ -23,7 +23,7 @@ func TestConfigLifecycle(t *testing.T) {
 	ctx := context.Background()
 	s := openTest(t)
 
-	created, err := s.CreateConfig(ctx, Config{URL: "http://vendor", APIKey: "secret", Enable: true, RefreshInterval: 60, RequestTimeout: 30, ProjectIDs: []string{"1"}})
+	created, err := s.CreateConfig(ctx, Config{URL: "http://vendor", APIKey: "secret", Enable: true, RefreshInterval: 60, RequestTimeout: 30})
 	if err != nil {
 		t.Fatalf("create: %v", err)
 	}
@@ -35,7 +35,7 @@ func TestConfigLifecycle(t *testing.T) {
 	if err != nil {
 		t.Fatalf("get: %v", err)
 	}
-	if got.URL != "http://vendor" || got.APIKey != "secret" || len(got.ProjectIDs) != 1 || got.ProjectIDs[0] != "1" {
+	if got.URL != "http://vendor" || got.APIKey != "secret" {
 		t.Fatalf("get returned %+v", got)
 	}
 

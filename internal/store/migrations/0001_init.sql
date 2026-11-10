@@ -5,6 +5,5 @@ CREATE TABLE config
     api_key          TEXT    NOT NULL DEFAULT '',
     enable           INTEGER NOT NULL DEFAULT 1,
     refresh_interval INTEGER NOT NULL DEFAULT 60,
-    request_timeout  INTEGER NOT NULL DEFAULT 30,
-    project_ids      TEXT    NOT NULL DEFAULT '[]' -- JSON array
+    request_timeout  INTEGER NOT NULL DEFAULT 30
 );

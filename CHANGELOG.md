@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - rebuild the template on API v2 only: no platform database access, own data in SQLite [@al]
 - go-eliona v2, API client v3, oapi-codegen strict server on the standard library router, Go 1.27 [@al]
+- assets belong to the tenant of the API key; no project selection in the configuration [@al]
 
 ### Added
 

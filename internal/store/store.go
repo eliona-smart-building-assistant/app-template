@@ -22,7 +22,6 @@ type Config struct {
 	Enable          bool
 	RefreshInterval int32 // seconds
 	RequestTimeout  int32 // seconds
-	ProjectIDs      []string
 }
 
 // Store is everything the app persists. Swap the implementation without touching the rest of the app.

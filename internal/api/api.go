@@ -122,14 +122,12 @@ func notFound(id int64) apiserver.NotFoundJSONResponse {
 
 // toAPI never returns the vendor API key; the schema marks it writeOnly.
 func toAPI(c store.Config) apiserver.Configuration {
-	projects := c.ProjectIDs
 	return apiserver.Configuration{
 		Id:              &c.ID,
 		Url:             c.URL,
 		Enable:          &c.Enable,
 		RefreshInterval: &c.RefreshInterval,
 		RequestTimeout:  &c.RequestTimeout,
-		ProjectIDs:      &projects,
 	}
 }
 
@@ -162,9 +160,6 @@ func fromAPI(in apiserver.Configuration, base store.Config) (store.Config, error
 			return store.Config{}, fmt.Errorf("requestTimeout must be at least 1 second")
 		}
 		c.RequestTimeout = *in.RequestTimeout
-	}
-	if in.ProjectIDs != nil {
-		c.ProjectIDs = *in.ProjectIDs
 	}
 	return c, nil
 }

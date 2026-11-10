@@ -18,18 +18,18 @@ import (
 )
 
 type fakePlatform struct {
-	assets  map[string]int32 // gai@project -> asset ID
+	assets  map[string]int32 // gai -> asset ID
 	data    map[int32]map[string]any
 	upserts int
 }
 
-func (f *fakePlatform) UpsertAsset(projectID, gai, assetType, name string) (int32, error) {
+func (f *fakePlatform) UpsertAsset(gai, assetType, name string) (int32, error) {
 	f.upserts++
-	if id, ok := f.assets[gai+"@"+projectID]; ok {
+	if id, ok := f.assets[gai]; ok {
 		return id, nil
 	}
 	id := int32(len(f.assets) + 1)
-	f.assets[gai+"@"+projectID] = id
+	f.assets[gai] = id
 	return id, nil
 }
 
@@ -54,7 +54,7 @@ func TestSyncUpsertsAssetsOnceAndWritesData(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer s.Close()
-	c, err := s.CreateConfig(ctx, store.Config{URL: vendorAPI.URL, APIKey: "key", Enable: true, RefreshInterval: 60, RequestTimeout: 5, ProjectIDs: []string{"1", "2"}})
+	c, err := s.CreateConfig(ctx, store.Config{URL: vendorAPI.URL, APIKey: "key", Enable: true, RefreshInterval: 60, RequestTimeout: 5})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -67,15 +67,15 @@ func TestSyncUpsertsAssetsOnceAndWritesData(t *testing.T) {
 		}
 	}
 
-	if len(p.assets) != 4 {
-		t.Fatalf("want 4 assets (2 devices x 2 projects), got %d", len(p.assets))
+	if len(p.assets) != 2 {
+		t.Fatalf("want 2 assets, got %d", len(p.assets))
 	}
-	if p.upserts != 4 {
+	if p.upserts != 2 {
 		t.Fatalf("assets must be upserted once and then come from the cache, got %d upserts", p.upserts)
 	}
-	id, ok := p.assets[fmt.Sprintf("%s_%d_a@2", AssetType, c.ID)]
+	id, ok := p.assets[fmt.Sprintf("%s_%d_a", AssetType, c.ID)]
 	if !ok {
-		t.Fatal("device a has no asset in project 2")
+		t.Fatal("device a has no asset")
 	}
 	if got := p.data[id]["temperature"]; got != 21.5 {
 		t.Fatalf("temperature of device a: %v", got)
@@ -97,7 +97,7 @@ func TestSyncReportsVendorError(t *testing.T) {
 	p := &fakePlatform{assets: map[string]int32{}, data: map[int32]map[string]any{}}
 	w := New(s, p, slog.New(slog.NewTextHandler(io.Discard, nil)))
 
-	if err := w.Sync(ctx, store.Config{ID: 1, URL: vendorAPI.URL, RequestTimeout: 5, ProjectIDs: []string{"1"}}); err == nil {
+	if err := w.Sync(ctx, store.Config{ID: 1, URL: vendorAPI.URL, RequestTimeout: 5}); err == nil {
 		t.Fatal("want an error for a rejected vendor request")
 	}
 	if len(p.assets) != 0 {

@@ -26,9 +26,6 @@ type Configuration struct {
 	// Id ID of the configuration
 	Id *int64 `json:"id,omitempty"`
 
-	// ProjectIDs BuildingPro Suites projects to create the assets in
-	ProjectIDs *[]string `json:"projectIDs,omitempty"`
-
 	// RefreshInterval Seconds between two polls
 	RefreshInterval *int32 `json:"refreshInterval,omitempty"`
 

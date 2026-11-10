@@ -75,7 +75,7 @@ Use these conventions so the form works without app-specific frontend code:
 | `type: integer` + `default`, `minimum` | number |
 | `type: boolean` | toggle |
 | `enum` | select |
-| `x-eliona-bind: projects` | picker of the tenant's projects |
+| `x-eliona-bind: <resource>` | picker of the tenant's resources, e.g. asset types |
 | `readOnly: true` | hidden in the form |
 
 Validate the same rules in `internal/api` as well; the form is a convenience, the API is the contract.
@@ -94,7 +94,8 @@ library router.
 - **Asset types**: one JSON file per type in `resources/asset-types`. They are created or updated on every start,
   so changing a file and restarting updates the type. The client rejects unknown fields: attributes take a
   numeric `unitId`, not a `unit` text as in older apps.
-- **Assets**: created with a stable global asset identifier (`<asset type>_<config ID>_<vendor ID>`). The upsert
+- **Assets** belong to the tenant of the app's API key; the app chooses no tenant or project. They are
+  created with a stable global asset identifier (`<asset type>_<config ID>_<vendor ID>`). The upsert
   by this identifier is idempotent, so the app needs no stored mapping: it caches the returned asset IDs in memory
   and upserts each asset once again after a restart.
 - **Data**: written with subtype `input` for measured values. Use `info` for static properties, `status` for
