@@ -1,0 +1,19 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [v2.0.0]
+
+### Changed
+
+- rebuild the template on API v2 only: no platform database access, own data in SQLite [@al]
+- go-eliona v2, API client v3, oapi-codegen strict server on the standard library router, Go 1.27 [@al]
+
+### Added
+
+- example worker that maps vendor devices to assets and writes their data [@al]
+- fake vendor for local development, GitHub Actions CI, developer guide [@al]
+
+### Removed
+
+- own database schema, `init.sql`, `INIT_CONNECTION_STRING` and Azure DevOps pipelines; the old state is tag `legacy-v14` [@al]

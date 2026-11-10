@@ -1,38 +1,25 @@
-#  This file is part of the Eliona project.
-#  Copyright © 2025 IoTEC AG. All Rights Reserved.
-#  ______ _ _
-# |  ____| (_)
-# | |__  | |_  ___  _ __   __ _
-# |  __| | | |/ _ \| '_ \ / _` |
-# | |____| | | (_) | | | | (_| |
-# |______|_|_|\___/|_| |_|\__,_|
-#
-#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-#  BUT NOT LIMITED  TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-#  NON INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-#  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+FROM golang:1.27.3-alpine3.23 AS build
 
-FROM eliona/base-golang:latest-1-alpine AS build
-
-RUN apk add git
-
-WORKDIR /
-COPY . ./
-
+WORKDIR /src
+COPY go.mod go.sum ./
 RUN go mod download
+COPY . .
 
-RUN DATE=$(date) && \
-    GIT_COMMIT=$(git rev-list -1 HEAD) && \
-    go build -ldflags "-X 'app-name/api/services.BuildTimestamp=$DATE' -X 'app-name/api/services.GitCommit=$GIT_COMMIT'" -o ../app-build
+ARG GIT_COMMIT=unknown
+RUN CGO_ENABLED=0 go build \
+    -ldflags "-s -w -X 'app-name/internal/api.BuildTimestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)' -X 'app-name/internal/api.GitCommit=${GIT_COMMIT}'" \
+    -o /out/app ./cmd/app-name
 
-FROM eliona/base-alpine:latest AS target
+FROM alpine:3.23.8
 
-COPY --from=build /app-build ./
-COPY db/*.sql ./db/
-COPY resources/ ./resources/
-COPY openapi.yaml ./
-COPY metadata.json ./
+RUN apk add --no-cache ca-certificates tzdata \
+    && adduser -D -H -u 1000 app \
+    && mkdir /data && chown app:app /data
 
-ENV TZ=Europe/Zurich
-CMD [ "/app-build" ]
+COPY --from=build /out/app /app
+
+USER 1000
+ENV DATA_DIR=/data
+VOLUME /data
+EXPOSE 3000
+ENTRYPOINT ["/app"]

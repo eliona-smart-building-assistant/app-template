@@ -1,64 +1,32 @@
 openapi: 3.0.3
 
-#  This file is part of the Eliona project.
-#  Copyright © 2025 IoTEC AG. All Rights Reserved.
-#  ______ _ _
-# |  ____| (_)
-# | |__  | |_  ___  _ __   __ _
-# |  __| | | |/ _ \| '_ \ / _` |
-# | |____| | | (_) | | | | (_| |
-# |______|_|_|\___/|_| |_|\__,_|
-#
-#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-#  BUT NOT LIMITED  TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-#  NON INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-#  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 info:
+  title: App Name API
+  description: API to configure the App Name app. BuildingPro Suites renders the configuration form from the Configuration schema.
   version: 1.0.0
-  title: App Name app API
-  description: API to access and configure the App Name app
+
 externalDocs:
-  description: Find out more about the App Name app
-  url: https://doc.eliona.io/collection/eliona-english/eliona-apps/apps/app-name
+  description: Developer guide
+  url: https://github.com/eliona-smart-building-assistant/app-template/blob/main/docs/DEVELOPMENT.md
+
 servers:
-  - url: "https://{server}/v1"
-    variables:
-      server:
-        default: app-name
-  - url: "https://{environment}.eliona.io/apps/app-name/api/v1"
-    variables:
-      environment:
-        default: name
+  - url: http://app-name/v1
 
 tags:
   - name: Configuration
     description: Configure the app
-    externalDocs:
-      url: https://github.com/eliona-smart-building-assistant/app-name-app
-
   - name: Version
     description: API version
-    externalDocs:
-      url: https://github.com/eliona-smart-building-assistant/app-name-app
-
-  - name: Customization
-    description: Help to customize Eliona environment
-    externalDocs:
-      url: https://github.com/eliona-smart-building-assistant/app-name-app
 
 paths:
-  /configurations:
+  /configs:
     get:
-      tags:
-        - Configuration
-      summary: Get configurations
-      description: Gets information about all configurations.
-      operationId: getConfigurations
+      tags: [Configuration]
+      summary: List configurations
+      operationId: listConfigurations
       responses:
         "200":
-          description: Successfully returned all configurations
+          description: All configurations of the app
           content:
             application/json:
               schema:
@@ -66,101 +34,183 @@ paths:
                 items:
                   $ref: "#/components/schemas/Configuration"
     post:
-      tags:
-        - Configuration
-      summary: Creates a configuration
-      description: Creates a configuration.
-      operationId: postConfiguration
+      tags: [Configuration]
+      summary: Create a configuration
+      operationId: createConfiguration
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Configuration"
       responses:
         "201":
-          description: Successfully created a configuration
+          description: Configuration created
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Configuration"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /configs/{configId}:
+    parameters:
+      - $ref: "#/components/parameters/ConfigId"
+    get:
+      tags: [Configuration]
+      summary: Get a configuration
+      operationId: getConfiguration
+      responses:
+        "200":
+          description: The configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags: [Configuration]
+      summary: Update a configuration
+      description: An omitted apiKey keeps the stored key.
+      operationId: updateConfiguration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Configuration"
+      responses:
+        "200":
+          description: Configuration updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Configuration]
+      summary: Delete a configuration
+      operationId: deleteConfiguration
+      responses:
+        "204":
+          description: Configuration deleted
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /version:
     get:
-      summary: Version of the API
-      description: Gets information about the APIs version.
+      tags: [Version]
+      summary: Version of the app
       operationId: getVersion
-      tags:
-        - Version
       responses:
         "200":
-          description: Successfully returned the APIs version.
+          description: Build information
           content:
             application/json:
               schema:
-                type: object
+                $ref: "#/components/schemas/Version"
 
   /version/openapi.json:
     get:
-      summary: OpenAPI specification for this API version
-      description: Gets specification for this API version as an openapi.json file.
+      tags: [Version]
+      summary: OpenAPI specification of this API
       operationId: getOpenAPI
-      tags:
-        - Version
       responses:
         "200":
-          description: Successfully returned the openapi.json file.
+          description: The specification as JSON
           content:
             application/json:
               schema:
                 type: object
 
-  /dashboard-templates/{dashboard-template-name}:
-    get:
-      tags:
-        - Customization
-      summary: Get a full dashboard template
-      description: Delivers a dashboard template which can assigned to users in Eliona
-      externalDocs:
-        description: The API to assign the dashboard to users in Eliona (see post /dashboards endpoint).
-        url: https://github.com/eliona-smart-building-assistant/eliona-api
-      operationId: getDashboardTemplateByName
-      parameters:
-        - name: dashboard-template-name
-          in: path
-          description: Name of the dashboard template
-          required: true
-          schema:
-            type: string
-            example: Template
-        - name: projectId
-          in: query
-          description: Define the project the dashboard should be
-          required: true
-          schema:
-            type: string
-            example: 99
-      responses:
-        "200":
-          description: Successfully returned dashboard template
-          content:
-            application/json:
-              schema:
-                $ref: "https://raw.githubusercontent.com/eliona-smart-building-assistant/eliona-api/main/openapi.yaml#/components/schemas/Dashboard"
-        "404":
-          description: Template name not found
-
 components:
+  parameters:
+    ConfigId:
+      name: configId
+      in: path
+      required: true
+      description: ID of the configuration
+      schema:
+        type: integer
+        format: int64
+
+  responses:
+    BadRequest:
+      description: The request is invalid
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: The configuration does not exist
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
   schemas:
     Configuration:
       type: object
-      description: Simply a example configuration
+      description: Connection to one vendor account. Field types and formats drive the generated form.
+      required: [url]
       properties:
         id:
           type: integer
           format: int64
-          description: A id identifying the example configuration
           readOnly: true
-          nullable: true
-        config:
+          description: ID of the configuration
+        url:
           type: string
-          description: Configuration data for example
+          format: uri
+          description: Base URL of the vendor API
+          example: http://fake-vendor:8080
+        apiKey:
+          type: string
+          format: password
+          writeOnly: true
+          description: API key of the vendor account
+        enable:
+          type: boolean
+          default: true
+          description: Poll the vendor API
+        refreshInterval:
+          type: integer
+          format: int32
+          default: 60
+          minimum: 10
+          description: Seconds between two polls
+        requestTimeout:
+          type: integer
+          format: int32
+          default: 30
+          minimum: 1
+          description: Timeout of one vendor request in seconds
+        projectIDs:
+          type: array
+          description: BuildingPro Suites projects to create the assets in
+          x-eliona-bind: projects
+          items:
+            type: string
+          example: ["1"]
+
+    Version:
+      type: object
+      required: [timestamp, commit]
+      properties:
+        timestamp:
+          type: string
+          description: Build time
+        commit:
+          type: string
+          description: Git commit of the build
+
+    Error:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
