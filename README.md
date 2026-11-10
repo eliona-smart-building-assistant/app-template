@@ -31,12 +31,16 @@ Requirements: Go 1.27, Docker.
 1. Create your repository from this template (GitHub button "Use this template") and replace the placeholders,
    see [Rename the app](docs/DEVELOPMENT.md#rename-the-app).
 
-2. Start the platform mock (API v2 on `localhost:3000`, API key `secret`):
+2. Start the platform mock (API v2 on `localhost:3000`, API key `secret`) and create a project:
 
    ```sh
-   git clone https://github.com/eliona-smart-building-assistant/eliona-mock
+   git clone --branch v26.4.3 https://github.com/eliona-smart-building-assistant/eliona-mock
    docker compose -f eliona-mock/docker-compose.yml up -d
+   curl -X PUT localhost:3000/v2/projects -H 'X-API-Key: secret' -H 'Content-Type: application/json' \
+     -d '{"title":"Mock project"}'
    ```
+
+   The response contains the project ID used in step 4.
 
 3. Start the fake vendor and the app:
 
@@ -51,10 +55,11 @@ Requirements: Go 1.27, Docker.
 
    ```sh
    curl -X POST localhost:3001/v1/configs -H 'Content-Type: application/json' \
-     -d '{"url":"http://localhost:8080","refreshInterval":10,"projectIDs":["1"]}'
+     -d '{"url":"http://localhost:8080","refreshInterval":10,"projectIDs":["<project ID>"]}'
    ```
 
-   Within one refresh interval the app creates three assets of type `app_name_device` in project 1.
+   Within one refresh interval the app creates three assets of type `app_name_device` in the project and
+   writes their temperature; check with `curl 'localhost:3000/v2/data?assetId=2' -H 'X-API-Key: secret'`.
 
 ## Environment
 
