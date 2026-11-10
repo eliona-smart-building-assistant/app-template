@@ -11,7 +11,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- example worker that maps vendor devices to assets and writes their data [@al]
+- app contract: API v2 only, local data under DATA_DIR, declared egress hosts, probes on port 5000 [@al]
+- metadata.json declares category external, API key role and egress hosts [@al]
+- example worker that maps vendor devices to assets by global asset identifier and writes their data [@al]
 - fake vendor for local development, GitHub Actions CI, developer guide [@al]
 
 ### Removed

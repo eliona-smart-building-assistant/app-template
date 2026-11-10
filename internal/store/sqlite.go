@@ -184,25 +184,6 @@ func (s *SQLite) DeleteConfig(ctx context.Context, id int64) error {
 	return nil
 }
 
-func (s *SQLite) AssetID(ctx context.Context, configID int64, projectID, vendorID string) (int32, bool, error) {
-	var id int32
-	err := s.db.QueryRowContext(ctx,
-		`SELECT asset_id FROM asset WHERE config_id = ? AND project_id = ? AND vendor_id = ?`,
-		configID, projectID, vendorID).Scan(&id)
-	if errors.Is(err, sql.ErrNoRows) {
-		return 0, false, nil
-	}
-	return id, err == nil, err
-}
-
-func (s *SQLite) SetAssetID(ctx context.Context, configID int64, projectID, vendorID string, assetID int32) error {
-	_, err := s.db.ExecContext(ctx,
-		`INSERT INTO asset (config_id, project_id, vendor_id, asset_id) VALUES (?, ?, ?, ?)
-		 ON CONFLICT (config_id, project_id, vendor_id) DO UPDATE SET asset_id = excluded.asset_id`,
-		configID, projectID, vendorID, assetID)
-	return err
-}
-
 func nonNil(s []string) []string {
 	if s == nil {
 		return []string{}

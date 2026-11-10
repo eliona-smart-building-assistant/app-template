@@ -33,10 +33,11 @@ type Worker struct {
 	platform Platform
 	log      *slog.Logger
 	lastRun  map[int64]time.Time
+	assets   map[string]int32 // global asset identifier and project -> asset ID, rebuilt after a restart
 }
 
 func New(s store.Store, p Platform, log *slog.Logger) *Worker {
-	return &Worker{store: s, platform: p, log: log, lastRun: map[int64]time.Time{}}
+	return &Worker{store: s, platform: p, log: log, lastRun: map[int64]time.Time{}, assets: map[string]int32{}}
 }
 
 // Run checks every second which configuration is due, until ctx is cancelled.
@@ -92,19 +93,19 @@ func (w *Worker) Sync(ctx context.Context, c store.Config) error {
 	return nil
 }
 
-// assetID returns the known asset of a device, or creates it on first sight and remembers the mapping.
-func (w *Worker) assetID(ctx context.Context, configID int64, projectID string, d vendor.Device) (int32, error) {
-	if id, ok, err := w.store.AssetID(ctx, configID, projectID, d.ID); err != nil || ok {
-		return id, err
-	}
+// assetID returns the asset of a device. The global asset identifier makes the upsert idempotent, so the
+// mapping needs no storage: after a restart the first sync upserts each asset once and caches its ID.
+func (w *Worker) assetID(_ context.Context, configID int64, projectID string, d vendor.Device) (int32, error) {
 	gai := fmt.Sprintf("%s_%d_%s", AssetType, configID, d.ID)
+	key := gai + "@" + projectID
+	if id, ok := w.assets[key]; ok {
+		return id, nil
+	}
 	id, err := w.platform.UpsertAsset(projectID, gai, AssetType, d.Name)
 	if err != nil {
 		return 0, fmt.Errorf("asset of device %s: %w", d.ID, err)
 	}
-	if err := w.store.SetAssetID(ctx, configID, projectID, d.ID, id); err != nil {
-		return 0, err
-	}
-	w.log.Info("asset created", "config", configID, "project", projectID, "device", d.ID, "asset", id)
+	w.assets[key] = id
+	w.log.Info("asset upserted", "config", configID, "project", projectID, "device", d.ID, "asset", id)
 	return id, nil
 }
