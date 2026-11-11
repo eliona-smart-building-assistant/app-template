@@ -1,7 +1,7 @@
 # App template for BuildingPro Suites
 
 Start here to build your own app for BuildingPro Suites. The app talks to the platform only through the public
-[API v2](https://github.com/eliona-smart-building-assistant/eliona-api) with its own API key. It needs no access
+[API v2](https://api-doc.buildings.ability.abb) with its own API key. It needs no access
 to the platform database and keeps its own data in an embedded SQLite file.
 
 > Looking for the old template with its own database schema (`init.sql`, `INIT_CONNECTION_STRING`)?
@@ -82,5 +82,5 @@ Run exactly one instance per API key; SQLite does not support several writers. P
 
 - [App contract](docs/DEVELOPMENT.md#app-contract): the rules every store app must keep
 - [Developer guide](docs/DEVELOPMENT.md): structure, rename, configuration schema, data, tests, release
-- [API v2 reference](https://api.eliona.io/?https://raw.githubusercontent.com/eliona-smart-building-assistant/eliona-api/main/openapi.yaml)
+- [API v2 reference](https://api-doc.buildings.ability.abb)
 - [Platform mock](https://github.com/eliona-smart-building-assistant/eliona-mock)
