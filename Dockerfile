@@ -21,5 +21,5 @@ COPY --from=build /out/app /app
 USER 1000
 ENV DATA_DIR=/data
 VOLUME /data
-EXPOSE 3000
+EXPOSE 3000 5000
 ENTRYPOINT ["/app"]

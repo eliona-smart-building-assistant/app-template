@@ -189,13 +189,6 @@ components:
           default: 30
           minimum: 1
           description: Timeout of one vendor request in seconds
-        projectIDs:
-          type: array
-          description: BuildingPro Suites projects to create the assets in
-          x-eliona-bind: projects
-          items:
-            type: string
-          example: ["1"]
 
     Version:
       type: object

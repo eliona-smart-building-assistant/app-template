@@ -7,7 +7,6 @@ import (
 	"context"
 	"database/sql"
 	"embed"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -92,18 +91,14 @@ func migrate(ctx context.Context, db *sql.DB) error {
 
 func (s *SQLite) Close() error { return s.db.Close() }
 
-const configColumns = `id, url, api_key, enable, refresh_interval, request_timeout, project_ids`
+const configColumns = `id, url, api_key, enable, refresh_interval, request_timeout`
 
 type scanner interface{ Scan(dest ...any) error }
 
 func scanConfig(row scanner) (Config, error) {
 	var c Config
-	var projects string
-	if err := row.Scan(&c.ID, &c.URL, &c.APIKey, &c.Enable, &c.RefreshInterval, &c.RequestTimeout, &projects); err != nil {
+	if err := row.Scan(&c.ID, &c.URL, &c.APIKey, &c.Enable, &c.RefreshInterval, &c.RequestTimeout); err != nil {
 		return Config{}, err
-	}
-	if err := json.Unmarshal([]byte(projects), &c.ProjectIDs); err != nil {
-		return Config{}, fmt.Errorf("config %d: project_ids: %w", c.ID, err)
 	}
 	return c, nil
 }
@@ -134,31 +129,22 @@ func (s *SQLite) GetConfig(ctx context.Context, id int64) (Config, error) {
 }
 
 func (s *SQLite) CreateConfig(ctx context.Context, c Config) (Config, error) {
-	projects, err := json.Marshal(nonNil(c.ProjectIDs))
-	if err != nil {
-		return Config{}, err
-	}
 	res, err := s.db.ExecContext(ctx,
-		`INSERT INTO config (url, api_key, enable, refresh_interval, request_timeout, project_ids) VALUES (?, ?, ?, ?, ?, ?)`,
-		c.URL, c.APIKey, c.Enable, c.RefreshInterval, c.RequestTimeout, string(projects))
+		`INSERT INTO config (url, api_key, enable, refresh_interval, request_timeout) VALUES (?, ?, ?, ?, ?)`,
+		c.URL, c.APIKey, c.Enable, c.RefreshInterval, c.RequestTimeout)
 	if err != nil {
 		return Config{}, err
 	}
 	if c.ID, err = res.LastInsertId(); err != nil {
 		return Config{}, err
 	}
-	c.ProjectIDs = nonNil(c.ProjectIDs)
 	return c, nil
 }
 
 func (s *SQLite) UpdateConfig(ctx context.Context, c Config) (Config, error) {
-	projects, err := json.Marshal(nonNil(c.ProjectIDs))
-	if err != nil {
-		return Config{}, err
-	}
 	res, err := s.db.ExecContext(ctx,
-		`UPDATE config SET url = ?, api_key = ?, enable = ?, refresh_interval = ?, request_timeout = ?, project_ids = ? WHERE id = ?`,
-		c.URL, c.APIKey, c.Enable, c.RefreshInterval, c.RequestTimeout, string(projects), c.ID)
+		`UPDATE config SET url = ?, api_key = ?, enable = ?, refresh_interval = ?, request_timeout = ? WHERE id = ?`,
+		c.URL, c.APIKey, c.Enable, c.RefreshInterval, c.RequestTimeout, c.ID)
 	if err != nil {
 		return Config{}, err
 	}
@@ -167,7 +153,6 @@ func (s *SQLite) UpdateConfig(ctx context.Context, c Config) (Config, error) {
 	} else if n == 0 {
 		return Config{}, ErrNotFound
 	}
-	c.ProjectIDs = nonNil(c.ProjectIDs)
 	return c, nil
 }
 
@@ -182,30 +167,4 @@ func (s *SQLite) DeleteConfig(ctx context.Context, id int64) error {
 		return ErrNotFound
 	}
 	return nil
-}
-
-func (s *SQLite) AssetID(ctx context.Context, configID int64, projectID, vendorID string) (int32, bool, error) {
-	var id int32
-	err := s.db.QueryRowContext(ctx,
-		`SELECT asset_id FROM asset WHERE config_id = ? AND project_id = ? AND vendor_id = ?`,
-		configID, projectID, vendorID).Scan(&id)
-	if errors.Is(err, sql.ErrNoRows) {
-		return 0, false, nil
-	}
-	return id, err == nil, err
-}
-
-func (s *SQLite) SetAssetID(ctx context.Context, configID int64, projectID, vendorID string, assetID int32) error {
-	_, err := s.db.ExecContext(ctx,
-		`INSERT INTO asset (config_id, project_id, vendor_id, asset_id) VALUES (?, ?, ?, ?)
-		 ON CONFLICT (config_id, project_id, vendor_id) DO UPDATE SET asset_id = excluded.asset_id`,
-		configID, projectID, vendorID, assetID)
-	return err
-}
-
-func nonNil(s []string) []string {
-	if s == nil {
-		return []string{}
-	}
-	return s
 }

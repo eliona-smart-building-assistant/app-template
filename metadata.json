@@ -1,6 +1,11 @@
 {
   "name": "app-name",
-  "elionaMinVersion": "v14.0.0",
+  "category": "external",
+  "elionaMinVersion": "v26.4.3",
+  "apiKeyRole": "standard",
+  "egress": [
+    "api.app-name.example"
+  ],
   "displayName": {
     "en": "App Name",
     "de": "App Name"

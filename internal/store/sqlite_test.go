@@ -23,7 +23,7 @@ func TestConfigLifecycle(t *testing.T) {
 	ctx := context.Background()
 	s := openTest(t)
 
-	created, err := s.CreateConfig(ctx, Config{URL: "http://vendor", APIKey: "secret", Enable: true, RefreshInterval: 60, RequestTimeout: 30, ProjectIDs: []string{"1"}})
+	created, err := s.CreateConfig(ctx, Config{URL: "http://vendor", APIKey: "secret", Enable: true, RefreshInterval: 60, RequestTimeout: 30})
 	if err != nil {
 		t.Fatalf("create: %v", err)
 	}
@@ -35,7 +35,7 @@ func TestConfigLifecycle(t *testing.T) {
 	if err != nil {
 		t.Fatalf("get: %v", err)
 	}
-	if got.URL != "http://vendor" || got.APIKey != "secret" || len(got.ProjectIDs) != 1 || got.ProjectIDs[0] != "1" {
+	if got.URL != "http://vendor" || got.APIKey != "secret" {
 		t.Fatalf("get returned %+v", got)
 	}
 
@@ -56,35 +56,6 @@ func TestConfigLifecycle(t *testing.T) {
 	}
 	if err := s.DeleteConfig(ctx, created.ID); !errors.Is(err, ErrNotFound) {
 		t.Fatalf("second delete: %v", err)
-	}
-}
-
-func TestAssetMappingFollowsConfig(t *testing.T) {
-	ctx := context.Background()
-	s := openTest(t)
-	c, err := s.CreateConfig(ctx, Config{URL: "http://vendor", Enable: true, RefreshInterval: 60, RequestTimeout: 30})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if _, ok, err := s.AssetID(ctx, c.ID, "1", "dev-1"); err != nil || ok {
-		t.Fatalf("unknown device: ok=%v err=%v", ok, err)
-	}
-	if err := s.SetAssetID(ctx, c.ID, "1", "dev-1", 42); err != nil {
-		t.Fatal(err)
-	}
-	if err := s.SetAssetID(ctx, c.ID, "1", "dev-1", 43); err != nil {
-		t.Fatal(err)
-	}
-	if id, ok, err := s.AssetID(ctx, c.ID, "1", "dev-1"); err != nil || !ok || id != 43 {
-		t.Fatalf("mapped device: id=%d ok=%v err=%v", id, ok, err)
-	}
-
-	if err := s.DeleteConfig(ctx, c.ID); err != nil {
-		t.Fatal(err)
-	}
-	if _, ok, err := s.AssetID(ctx, c.ID, "1", "dev-1"); err != nil || ok {
-		t.Fatalf("mapping must be deleted with its config: ok=%v err=%v", ok, err)
 	}
 }
 

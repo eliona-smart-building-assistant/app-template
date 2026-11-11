@@ -22,7 +22,7 @@ const AssetType = "app_name_device"
 
 // Platform is the part of the platform client the worker needs; tests replace it.
 type Platform interface {
-	UpsertAsset(projectID, gai, assetType, name string) (int32, error)
+	UpsertAsset(gai, assetType, name string) (int32, error)
 	PutData(assetID int32, subtype api.DataSubtype, values map[string]any) error
 }
 
@@ -33,10 +33,11 @@ type Worker struct {
 	platform Platform
 	log      *slog.Logger
 	lastRun  map[int64]time.Time
+	assets   map[string]int32 // global asset identifier -> asset ID, rebuilt after a restart
 }
 
 func New(s store.Store, p Platform, log *slog.Logger) *Worker {
-	return &Worker{store: s, platform: p, log: log, lastRun: map[int64]time.Time{}}
+	return &Worker{store: s, platform: p, log: log, lastRun: map[int64]time.Time{}, assets: map[string]int32{}}
 }
 
 // Run checks every second which configuration is due, until ctx is cancelled.
@@ -70,41 +71,38 @@ func (w *Worker) tick(ctx context.Context, now time.Time) {
 	}
 }
 
-// Sync reads the devices of one configuration and creates or updates their assets and data in every project.
+// Sync reads the devices of one configuration and creates or updates their assets and data.
 func (w *Worker) Sync(ctx context.Context, c store.Config) error {
 	client := vendor.NewClient(c.URL, c.APIKey, time.Duration(c.RequestTimeout)*time.Second)
 	devices, err := client.Devices(ctx)
 	if err != nil {
 		return err
 	}
-	for _, projectID := range c.ProjectIDs {
-		for _, d := range devices {
-			assetID, err := w.assetID(ctx, c.ID, projectID, d)
-			if err != nil {
-				return err
-			}
-			if err := w.platform.PutData(assetID, api.INPUT, map[string]any{"temperature": d.Temperature}); err != nil {
-				return fmt.Errorf("data of device %s: %w", d.ID, err)
-			}
+	for _, d := range devices {
+		assetID, err := w.assetID(ctx, c.ID, d)
+		if err != nil {
+			return err
+		}
+		if err := w.platform.PutData(assetID, api.INPUT, map[string]any{"temperature": d.Temperature}); err != nil {
+			return fmt.Errorf("data of device %s: %w", d.ID, err)
 		}
 	}
-	w.log.Debug("synced", "config", c.ID, "devices", len(devices), "projects", len(c.ProjectIDs))
+	w.log.Debug("synced", "config", c.ID, "devices", len(devices))
 	return nil
 }
 
-// assetID returns the known asset of a device, or creates it on first sight and remembers the mapping.
-func (w *Worker) assetID(ctx context.Context, configID int64, projectID string, d vendor.Device) (int32, error) {
-	if id, ok, err := w.store.AssetID(ctx, configID, projectID, d.ID); err != nil || ok {
-		return id, err
-	}
+// assetID returns the asset of a device. The global asset identifier makes the upsert idempotent, so the
+// mapping needs no storage: after a restart the first sync upserts each asset once and caches its ID.
+func (w *Worker) assetID(_ context.Context, configID int64, d vendor.Device) (int32, error) {
 	gai := fmt.Sprintf("%s_%d_%s", AssetType, configID, d.ID)
-	id, err := w.platform.UpsertAsset(projectID, gai, AssetType, d.Name)
+	if id, ok := w.assets[gai]; ok {
+		return id, nil
+	}
+	id, err := w.platform.UpsertAsset(gai, AssetType, d.Name)
 	if err != nil {
 		return 0, fmt.Errorf("asset of device %s: %w", d.ID, err)
 	}
-	if err := w.store.SetAssetID(ctx, configID, projectID, d.ID, id); err != nil {
-		return 0, err
-	}
-	w.log.Info("asset created", "config", configID, "project", projectID, "device", d.ID, "asset", id)
+	w.assets[gai] = id
+	w.log.Info("asset upserted", "config", configID, "device", d.ID, "asset", id)
 	return id, nil
 }

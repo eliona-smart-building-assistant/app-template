@@ -53,7 +53,7 @@ func do(t *testing.T, method, url, body string) (int, string) {
 func TestConfigurationAPI(t *testing.T) {
 	ts := newTestServer(t)
 
-	code, body := do(t, http.MethodPost, ts.URL+"/v1/configs", `{"url":"https://vendor.example","apiKey":"secret","projectIDs":["1"]}`)
+	code, body := do(t, http.MethodPost, ts.URL+"/v1/configs", `{"url":"https://vendor.example","apiKey":"secret"}`)
 	if code != http.StatusCreated {
 		t.Fatalf("create: %d %s", code, body)
 	}

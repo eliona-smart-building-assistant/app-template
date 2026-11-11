@@ -45,10 +45,10 @@ func (c *Client) InitAssetTypes(files fs.FS) error {
 	return nil
 }
 
-// UpsertAsset creates the asset or updates it by its global asset identifier and returns its ID.
-func (c *Client) UpsertAsset(projectID, gai, assetType, name string) (int32, error) {
+// UpsertAsset creates the asset or updates it by its global asset identifier and returns its ID. The asset
+// belongs to the tenant of the API key.
+func (c *Client) UpsertAsset(gai, assetType, name string) (int32, error) {
 	a := api.NewAsset(gai, assetType)
-	a.SetProjectId(projectID)
 	a.SetName(name)
 	id, err := asset.UpsertAsset(c.endpoint, c.apiKey, *a)
 	if err != nil {
